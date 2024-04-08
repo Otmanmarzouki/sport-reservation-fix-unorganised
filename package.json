@@ -1,0 +1,44 @@
+{
+  "name": "nextjsproject",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "format": "prettier --write *"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@fullcalendar/core": "^6.1.8",
+    "@fullcalendar/daygrid": "^6.1.8",
+    "@fullcalendar/react": "^6.1.8",
+    "@fullcalendar/timegrid": "^6.1.8",
+    "@mui/material": "^5.14.6",
+    "ag-charts-community": "^9.0.1",
+    "ag-charts-react": "^9.0.1",
+    "axios": "^1.4.0",
+    "chart.js": "^4.4.0",
+    "eslint": "8.35.0",
+    "eslint-config-next": "13.2.3",
+    "flowbite": "^1.8.1",
+    "flowbite-datepicker": "^1.2.2",
+    "flowbite-react": "^0.5.0",
+    "next": "^13.5.4",
+    "react": "18.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "18.2.0",
+    "react-icons": "^4.7.1",
+    "styled-components": "^5.3.9"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "autoprefixer": "^10.4.13",
+    "postcss": "^8.4.21",
+    "prettier": "^3.1.1",
+    "tailwindcss": "^3.2.7"
+  }
+}
