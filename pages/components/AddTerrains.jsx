@@ -71,7 +71,6 @@ export default function AddTerrains() {
                 <div className="flex  w-full mb-4  lg:justify-start justify-center">
                   <input
                     className=" w-4/5 lg:w-60 h-8 appearance-none border  rounded  py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    name="Telephone"
                     type="text"
                     placeholder="Terrain"
                   />
@@ -80,12 +79,22 @@ export default function AddTerrains() {
 
               <div className="flex w-full flex-col gap-2  ">
                 <div className=" lg:mx-0 mx-5  text-gray-400 text-sm ">Dimensions :</div>
-                <ReusableInput
-                  initialValue={count} // Pass initial value
-                  type="number" // Set type to number
-                  onChange={handleCountChange} // Provide onChange handler
-                  showButton={true} // Show increment button
-                />
+                <div className="flex">
+                  <ReusableInput
+                    className="w-28 h-8 appearance-none border rounded py-1 px-2 text-gray-400 leading-tight focus:outline-none focus:shadow-outline"
+                    initialValue={count} // Pass initial value
+                    type="number" // Set type to number
+                    onChange={handleCountChange} // Provide onChange handler
+                    showButton={true} // Show increment button
+                  />
+                  <ReusableInput
+                    className="w-28 h-8 appearance-none border rounded py-1 px-2 text-gray-400 leading-tight focus:outline-none focus:shadow-outline"
+                    initialValue={count} // Pass initial value
+                    type="number" // Set type to number
+                    onChange={handleCountChange} // Provide onChange handler
+                    showButton={true} // Show increment button
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -116,6 +125,7 @@ export default function AddTerrains() {
                   Capacité maximum/Joueurs:
                 </div>
                 <ReusableInput
+                  className="w-28 h-8 appearance-none border rounded py-1 px-2 text-gray-400 leading-tight focus:outline-none focus:shadow-outline"
                   initialValue={count} // Pass initial value
                   type="number" // Set type to number
                   onChange={handleCountChange} // Provide onChange handler
@@ -126,6 +136,7 @@ export default function AddTerrains() {
               <div className="flex flex-col w-full gap-2">
                 <div className="lg:mx-0 mx-5  text-gray-400 text-sm ">Prix par heur/person:</div>
                 <ReusableInput
+                  className="w-28 h-8 appearance-none border rounded py-1 px-2 text-gray-400 leading-tight focus:outline-none focus:shadow-outline"
                   initialValue={count} // Pass initial value
                   type="number" // Set type to number
                   onChange={handleCountChange} // Provide onChange handler

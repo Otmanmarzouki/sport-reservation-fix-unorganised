@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 function ReusableInput(props) {
+  const { className } = props;
   const [value, setValue] = useState(props.initialValue || ""); // Set default value
 
   const handleChange = (event) => {
@@ -24,7 +25,7 @@ function ReusableInput(props) {
       <div className="flex w-full flex-row lg:space-x-2 lg:justify-start justify-evenly">
         <div className="flex justify-center">
           <input
-            className="w-28 h-8 appearance-none border rounded py-1 px-2 text-gray-400 leading-tight focus:outline-none focus:shadow-outline"
+            className={className}
             type={props.type || "text"} // Set default type to text
             value={value}
             onChange={handleChange}
