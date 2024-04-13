@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
-import TitleComponentContent from "./SubComponents/TitleContentComponent";
-import SpinnerComponent from "./SubComponents/SpinnerComponent";
-import ReusableInput from "@/components/terrain/ReusableInput";
-import ReusableButton from "@/components/terrain/ReusableButton";
-import ReusableDropdown from "@/components/terrain/ReusableDropdown";
+import TitleComponentContent from "../../pages/components/SubComponents/TitleContentComponent";
+import SpinnerComponent from "../../pages/components/SubComponents/SpinnerComponent";
+import ReusableInput from "@/components/Terrain/Input";
+import ReusableButton from "@/components/Terrain/Button";
+import ReusableDropdown from "@/components/Terrain/Dropdown";
 const activity = [
   { value: 1, label: "Paddle" },
   { value: 2, label: "Tennis" },

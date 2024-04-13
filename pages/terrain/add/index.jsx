@@ -2,12 +2,13 @@ import React from "react";
 
 import Layout from "../../Layout/Layout";
 
-import ShowTerrains from "../../components/ShowTerrains";
-export default function terrain() {
+import AddTerrains from "../../../components/Terrain/AddTerrains";
+
+export default function index() {
   return (
     <>
       <Layout>
-        <ShowTerrains />
+        <AddTerrains />
       </Layout>
     </>
   );
