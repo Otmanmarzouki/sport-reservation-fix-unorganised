@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SidebarItem from "@/components/sidebar/items";
+import SidebarItem from "@/components/sidebar/Items";
 import {
   BiHomeAlt,
   BiCalendarAlt,

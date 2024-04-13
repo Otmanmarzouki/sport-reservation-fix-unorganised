@@ -69,7 +69,7 @@ const ShowTerrains = () => {
                   <td className="px-3 py-4">10</td>
                   <td className="px-3 py-4">10</td>
 
-                  <td className="px-3 py-4 ">
+                  <td className="px-1 py-4 ">
                     <div className=" flex flex-row space-x-3 text-lg">
                       <button className="bg-transparent bg-gray-200 rounded-lg text-blue-500 p-2">
                         <FiEdit />
@@ -95,7 +95,7 @@ const ShowTerrains = () => {
                   <td className="px-3 py-4">10</td>
                   <td className="px-3 py-4">10</td>
 
-                  <td className="px-3 py-4 ">
+                  <td className="px-1 py-4 ">
                     <div className=" flex flex-row space-x-3 text-lg">
                       <button className="bg-transparent bg-gray-200 rounded-lg text-blue-500 p-2">
                         <FiEdit />
@@ -120,7 +120,7 @@ const ShowTerrains = () => {
                   <td className="px-3 py-4">10</td>
                   <td className="px-3 py-4">10</td>
 
-                  <td className="px-3 py-4 ">
+                  <td className="px-1 py-4 ">
                     <div className=" flex flex-row space-x-3 text-lg">
                       <button className="bg-transparent bg-gray-200 rounded-lg text-blue-500 p-2">
                         <FiEdit />
