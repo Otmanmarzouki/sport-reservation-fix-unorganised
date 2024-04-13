@@ -1,7 +1,7 @@
 import React from "react";
-import TerrainCalendar from "@/components/terrain/Calendar";
-import TerrainActions from "@/components/TerrainActions";
-import SearchForm from "@/components/SearchForm";
+import TerrainCalendar from "@/components/Disponibilty/Calendar";
+import TerrainActions from "@/components/Disponibilty/TerrainActions";
+import SearchForm from "@/components/Disponibilty/SearchForm";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 const TerrainDispoComponent = () => {
