@@ -35,6 +35,7 @@ const clients = [
 
 const Customers = () => {
   const [selectedRow, setSelectedRow] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
 
   const handleSelectRow = (id) => {
     setSelectedRow(id === selectedRow ? null : id);
@@ -47,11 +48,16 @@ const Customers = () => {
   const handleDelete = () => {
     console.log("Delete client with ID:", selectedRow);
   };
-
+  const handleSearchChange = (searchValue) => {
+    setSearchValue(searchValue);
+  };
+  const filteredClients = clients.filter((client) =>
+    client.name.toLowerCase().includes(searchValue.toLowerCase()),
+  );
   return (
     <main className="flex flex-col w-full bg-gray-100 overflow-y-auto px-2 lg:px-4 space-y-8">
       <div className="flex flex-row justify-between lg:px-6 pt-8">
-        <SearchBar />
+        <SearchBar onSearchChange={handleSearchChange} />
         {selectedRow && <ActionButtons onEdit={handleEdit} onDelete={handleDelete} />}
       </div>
       <div className="flex lg:justify-center lg:px-6">
@@ -59,7 +65,7 @@ const Customers = () => {
           <table className="w-full text-xs lg:text-sm text-left">
             <TableHeader />
             <tbody>
-              {clients.map((client, index) => (
+              {filteredClients.map((client, index) => (
                 <TableRow key={index} client={client} onSelect={handleSelectRow} />
               ))}
             </tbody>
