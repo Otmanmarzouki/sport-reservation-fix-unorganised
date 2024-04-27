@@ -1,10 +1,12 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import { Line } from "react-chartjs-2";
+import { IoFilter } from "react-icons/io5";
+
 import {
   Chart as ChartJS,
   LineElement,
-  CategoryScale, // x axis
-  LinearScale, // y axis
+  CategoryScale,
+  LinearScale,
   PointElement,
   Legend,
   Tooltip,
@@ -12,6 +14,7 @@ import {
 } from "chart.js";
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Legend, Tooltip, Filler);
+
 const salesData = [
   { month: "January", sales: 100 },
   { month: "February", sales: 150 },
@@ -44,6 +47,7 @@ export default function EvolutionStatus() {
       },
     ],
   };
+
   const options = {
     plugins: {
       legend: true,
@@ -95,47 +99,48 @@ export default function EvolutionStatus() {
   };
 
   return (
-    <>
-      <main className="flex w-full bg-gray-100  overflow-y-auto">
-        <div className="flex flex-col w-full  p-1 lg:p-8 ">
-          <div className="flex  text-xl font-semibold pb-3">Evolution de reservation</div>
-          <div className="flex  flex-col space-y-5">
-            <div className="flex flex-row  justify-between ">
-              <div className="flex flex-row w-1/2 justify-start items-center lg:space-x-3">
-                <select
-                  data-te-select-init
-                  className="flex lg:p-1 outline-none  rounded text-gray-600 text-xs lg:text-sm"
-                >
-                  <option value="1">Default</option>
-                  <option value="2">Une Semaine</option>
-                  <option value="3">Un jour</option>
-                </select>
-              </div>
-              <div className="flex w-1/2 justify-end">
-                <select
-                  data-te-select-init
-                  className="flex lg:p-1 bg-blue-500 rounded text-white text-xs lg:text-sm"
-                >
-                  <option value="1">30 derniers Jours</option>
-                  <option value="2">Une Semaine</option>
-                  <option value="3">Un jour</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div className="  p-2 bg-white border rounded-b-xl">
-            <div
-              className="flex w-auto h-[400px] justify-center"
-              style={{
-                padding: "20px",
-                cursor: "pointer",
-              }}
-            >
-              <Line data={data} options={options}></Line>
-            </div>
-          </div>
+    <main className="w-full bg-gray-100 overflow-y-auto space-y-6 p-8">
+      <div className="text-xl font-semibold pb-6">Evolution de reservation</div>
+      <div className="flex flex-row justify-between items-center space-x-3 lg:space-x-0">
+        <div className="flex w-1/2">
+          <label htmlFor="timePeriod" className="sr-only">
+            Time Period
+          </label>
+          <select
+            id="timePeriod"
+            data-te-select-init
+            className="p-1 outline-none rounded text-xs lg:text-sm border border-gray-300"
+          >
+            <option value="1">Default</option>
+            <option value="2">Une Semaine</option>
+            <option value="3">Un jour</option>
+          </select>
+          <IoFilter className="text-gray-600 ml-2" />
         </div>
-      </main>
-    </>
+        <div className="flex w-1/2 justify-end space-x-3">
+          <label htmlFor="dateRange" className="sr-only">
+            Date Range
+          </label>
+          <select
+            id="dateRange"
+            data-te-select-init
+            className="p-1 bg-blue-500 rounded text-white text-xs lg:text-sm"
+          >
+            <option value="1">30 derniers Jours</option>
+            <option value="2">Une Semaine</option>
+            <option value="3">Un jour</option>
+          </select>
+        </div>
+      </div>
+      <div
+        className="flex justify-center w-auto h-[400px]  items-center p-4 bg-white border rounded-b-xl"
+        style={{
+          padding: "20px",
+          cursor: "pointer",
+        }}
+      >
+        <Line data={data} options={options}></Line>
+      </div>
+    </main>
   );
 }
