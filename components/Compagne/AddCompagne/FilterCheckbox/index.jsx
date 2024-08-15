@@ -13,10 +13,10 @@ const FilterCheckbox = ({ label }) => {
         type="checkbox"
         checked={checked}
         onChange={handleCheckboxChange}
-        className="peer relative h-6 w-6 cursor-pointer appearance-none rounded-full border-2 border-blue-600 checked:border-blue-600 checked:bg-blue-600"
+        className="peer relative lg:h-4 lg:w-4 w-3 h-3 cursor-pointer appearance-none rounded-full border-2 border-blue-600 checked:border-blue-600 checked:bg-blue-600"
         id={label.toLowerCase()}
       />
-      <label className="px-3 text-sm" htmlFor={label.toLowerCase()}>
+      <label className="px-3  lg:text-sm text-xs" htmlFor={label.toLowerCase()}>
         {label}
       </label>
     </div>

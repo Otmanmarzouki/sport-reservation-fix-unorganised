@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import SignInForm from "@/components/Login";
+import SignUpForm from "@/components/Register";
 export default function login() {
   return (
     <div className="bg-gray-200 flex justify-center items-center min-h-screen">
@@ -8,7 +8,13 @@ export default function login() {
           <div className="flex flex-col w-full md:w-1/2 p-4">
             <div className="flex flex-col flex-1 justify-center mb-8">
               <h1 className="text-xl text-center font-bold">Welcome Back</h1>
-              <SignInForm />
+              <SignUpForm />
+              <div className=" mt-4 flex mx-9 ">
+                <a className="no-underline hover:underline text-blue-dark text-xs grow ">
+                  Forgot Your Password?
+                </a>
+                <a className="no-underline  hover:underline text-blue-dark text-xs ">sign In</a>
+              </div>
             </div>
           </div>
           <div className="hidden md:block md:w-1/2 rounded-r-lg bg-[url('../../public/img/login.png')] bg-cover bg-center "></div>
