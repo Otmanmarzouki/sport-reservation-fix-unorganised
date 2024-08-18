@@ -6,16 +6,16 @@ function ReusableDropdown(props) {
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
     if (props.onChange) {
-      props.onChange(event.target.value); // Call parent's onChange handler
+      props.onChange(event.target.value);
     }
   };
 
   return (
-    <div className="flex w-full mb-4 lg:justify-start justify-center">
+    <div className="flex w-full  lg:justify-start justify-center">
       <div className="my-2 p-1 bg-white border border-gray-200 rounded w-4/5 lg:w-60">
         <select
           className="text-gray-400 w-full bg-white outline-none"
-          value={selectedValue} // Set selected value from state
+          value={selectedValue}
           onChange={handleChange}
         >
           {props.options.map((option) => (
