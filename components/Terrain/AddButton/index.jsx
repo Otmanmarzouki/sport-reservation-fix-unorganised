@@ -34,7 +34,6 @@ export default function AddButton({
       }
 
       const data = await response.json();
-      console.log("Success:", data); // Handle success response as needed
     } catch (error) {
       console.error("Error:", error);
     } finally {
