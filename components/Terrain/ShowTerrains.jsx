@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import { FiEdit } from "react-icons/fi";
 import DeleteButton from "@/components/Terrain/DeleteButton";
 
 const ShowTerrains = () => {
   const [terrains, setTerrains] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchData() {
@@ -22,10 +24,14 @@ const ShowTerrains = () => {
     }
     fetchData();
   }, []);
+
   const handleDeleteSuccess = (terrainId) => {
     setTerrains((prevTerrains) => prevTerrains.filter((terrain) => terrain.id !== terrainId));
   };
 
+  const handleEditClick = (terrainId) => {
+    router.push(`/terrain/edit/${terrainId}`);
+  };
   return (
     <>
       <main className="flex flex-col w-full bg-gray-100 overflow-y-auto px-4 space-y-8">
@@ -85,7 +91,10 @@ const ShowTerrains = () => {
                     <td className="px-3 py-4">{terrain.prix} €</td>
                     <td className="px-1 py-4">
                       <div className="flex flex-row space-x-3 text-lg">
-                        <button className="bg-transparent bg-gray-200 rounded-lg text-blue-500 p-2">
+                        <button
+                          className="bg-transparent bg-gray-200 rounded-lg text-blue-500 p-2"
+                          onClick={() => handleEditClick(terrain.id)} // Call the modified handleEditClick function
+                        >
                           <FiEdit />
                         </button>
                         <DeleteButton
