@@ -5,19 +5,19 @@ import interactionPlugin from "@fullcalendar/interaction";
 
 const NouvelleReservationComponent = () => {
   const [terrains, setTerrains] = useState([]);
-  const [selectedTerrain, setSelectedTerrain] = useState();
+  const [reservation, setReservation] = useState([]);
+  const [activité, setActivité] = useState();
   const [selectedDateRange, setSelectedDateRange] = useState({
     startDate: "",
     endDate: "",
   });
   const [form, setForm] = useState({
-    Username: "",
-    Telephone: "",
+    Prenom: "",
+    Nom: "",
     Email: "",
-    Details: "",
+    Tel: "",
   });
 
-  // Fetch terrains data on component load
   useEffect(() => {
     const getTerrains = async () => {
       try {
@@ -30,9 +30,21 @@ const NouvelleReservationComponent = () => {
     };
     getTerrains();
   }, []);
+  useEffect(() => {
+    const getReservations = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/api/getReservations");
+        const data = await response.json();
+        setReservation(data);
+      } catch (error) {
+        console.error("Error fetching Reservations:", error);
+      }
+    };
+    getReservations();
+  }, []);
 
   const handleTerrainChange = (e) => {
-    setSelectedTerrain(e.target.value);
+    setActivité(e.target.value);
   };
 
   // Handle date range selection from FullCalendar
@@ -48,6 +60,7 @@ const NouvelleReservationComponent = () => {
     hour: "numeric",
     minute: "2-digit",
   };
+
   const UpdateData = (e) => {
     setForm({
       ...form,
@@ -60,12 +73,10 @@ const NouvelleReservationComponent = () => {
 
     const formData = {
       ...form,
-      selectedTerrain,
-      startDate: selectedDateRange.startDate,
-      endDate: selectedDateRange.endDate,
+      activité,
+      DateDebut: selectedDateRange.startDate,
+      DateFin: selectedDateRange.endDate,
     };
-
-    console.log("Submitting form data:", formData);
 
     try {
       const response = await fetch("http://127.0.0.1:8000/api/addReservation", {
@@ -86,25 +97,30 @@ const NouvelleReservationComponent = () => {
       console.error("Error submitting form:", error);
     }
   };
+  const events = reservation.map((res) => ({
+    title: res.terrain.activité,
+    start: res.DateDebut,
+    end: res.DateFin,
+  }));
 
   return (
-    <main className="flex w-full bg-gray-100 overflow-y-auto ">
-      <div className="flex flex-col w-full space-y-8 py-4 px-4 ">
+    <main className="flex w-full bg-gray-100 overflow-y-auto">
+      <div className="flex flex-col w-full space-y-8 py-4 px-4">
         <div className="flex w-full flex-col lg:flex-row gap-6">
           <div className="flex w-full flex-col space-y-4">
-            <div className="flex lg:flex-row flex-col w-full space-y-2 lg:justify-evenly ">
+            <div className="flex lg:flex-row flex-col w-full lg:justify-evenly">
               {/* Terrain Select */}
               <div className="flex w-full justify-center">
                 <select
                   data-te-select-init
                   className="py-1 rounded-md text-sm lg:px-8 border-2"
-                  value={selectedTerrain}
+                  value={activité}
                   onChange={handleTerrainChange}
                 >
                   <option value="">Select Terrain</option>
                   {terrains.map((terrain) => (
-                    <option key={terrain.id} value={terrain.id}>
-                      {terrain.Nom_Terrain}
+                    <option key={terrain.id} value={terrain.activité}>
+                      {terrain.activité}
                     </option>
                   ))}
                 </select>
@@ -131,8 +147,9 @@ const NouvelleReservationComponent = () => {
                 center: "title",
                 right: "next",
               }}
-              selectable={true} // Enable date selection
-              select={handleDateSelect} // Handle date selection
+              selectable={true}
+              select={handleDateSelect}
+              events={events}
             />
           </div>
 
@@ -145,11 +162,19 @@ const NouvelleReservationComponent = () => {
               <div className="flex mb-4 text-lg font-semibold">
                 <h3>Informations personnelles</h3>
               </div>
-
               <div className="flex justify-center mb-4">
                 <input
                   className="shadow w-full appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  name="Username"
+                  name="Prenom"
+                  type="text"
+                  placeholder="Prénom"
+                  onChange={UpdateData}
+                />
+              </div>
+              <div className="flex justify-center mb-4">
+                <input
+                  className="shadow w-full appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  name="Nom"
                   type="text"
                   placeholder="Nom"
                   onChange={UpdateData}
@@ -160,9 +185,9 @@ const NouvelleReservationComponent = () => {
               <div className="flex justify-center mb-4">
                 <input
                   className="shadow w-full appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  name="Telephone"
+                  name="Tel"
                   type="text"
-                  placeholder="Telephone"
+                  placeholder="Téléphone"
                   onChange={UpdateData}
                 />
               </div>
@@ -180,41 +205,16 @@ const NouvelleReservationComponent = () => {
 
               {/* Sport Details */}
               <div className="flex mb-4 text-lg font-semibold">
-                <h3>Sport details</h3>
+                <h3>Détails sport</h3>
               </div>
               <div className="flex mb-4">
                 <input
                   className="shadow w-full appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  name="Details"
+                  name="details"
                   type="text"
-                  placeholder="Details"
+                  placeholder="Détails"
                   onChange={UpdateData}
                 />
-              </div>
-
-              {/* Payment Options */}
-              <div className="flex flex-row mb-4 space-x-2">
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 rounded-full shadow"
-                    name="Payment"
-                    value="Online"
-                  />
-                  <span className="ml-2 text-sm">Paiement en ligne</span>
-                </div>
-              </div>
-
-              <div className="flex flex-row mb-4 space-x-2">
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 rounded-full shadow"
-                    name="Payment"
-                    value="Cash"
-                  />
-                  <span className="ml-2 text-sm">Paiement en espèces</span>
-                </div>
               </div>
 
               {/* Submit Button */}
