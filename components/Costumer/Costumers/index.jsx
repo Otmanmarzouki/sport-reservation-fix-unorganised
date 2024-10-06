@@ -1,41 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TableHeader from "./Table/TableHeader";
 import TableRow from "./Table/TableRow";
 import SearchBar from "./SearchBar";
 import ActionButtons from "./Actions";
-const clients = [
-  {
-    id: 1,
-    name: "John Doe",
-    type: "Regular",
-    activity: "Running",
-    dimensions: "10x20",
-    capacity: 10,
-    price: 20.5,
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    type: "Premium",
-    activity: "Swimming",
-    dimensions: "15x30",
-    capacity: 15,
-    price: 25.75,
-  },
-  {
-    id: 3,
-    name: "Alice Johnson",
-    type: "Regular",
-    activity: "Cycling",
-    dimensions: "8x15",
-    capacity: 8,
-    price: 18.0,
-  },
-];
+import { fetchClients, deleteClient } from "@/services/client/index";
 
 const Customers = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [searchValue, setSearchValue] = useState("");
+  const [filteredClients, setFilteredClients] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const fetchedClient = await fetchClients();
+      setFilteredClients(fetchedClient);
+    };
+    fetchData();
+  }, []);
+
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm("Êtes-vous sûr de vouloir supprimer ce client?");
+    if (!confirmDelete) return;
+
+    const success = await deleteClient(selectedRow);
+    if (success) {
+      setFilteredClients(filteredClients.filter((client) => client.id !== selectedRow));
+      setSelectedRow(null);
+    }
+  };
 
   const handleSelectRow = (id) => {
     setSelectedRow(id === selectedRow ? null : id);
@@ -45,15 +37,10 @@ const Customers = () => {
     console.log("Edit client with ID:", selectedRow);
   };
 
-  const handleDelete = () => {
-    console.log("Delete client with ID:", selectedRow);
-  };
   const handleSearchChange = (searchValue) => {
     setSearchValue(searchValue);
   };
-  const filteredClients = clients.filter((client) =>
-    client.name.toLowerCase().includes(searchValue.toLowerCase()),
-  );
+
   return (
     <main className="flex flex-col w-full bg-gray-100 overflow-y-auto px-2 lg:px-4 space-y-8">
       <div className="flex flex-row justify-between lg:px-6 pt-8">
@@ -66,7 +53,12 @@ const Customers = () => {
             <TableHeader />
             <tbody>
               {filteredClients.map((client, index) => (
-                <TableRow key={index} client={client} onSelect={handleSelectRow} />
+                <TableRow
+                  key={index}
+                  client={client}
+                  onSelect={handleSelectRow}
+                  isSelected={selectedRow === client.id}
+                />
               ))}
             </tbody>
           </table>

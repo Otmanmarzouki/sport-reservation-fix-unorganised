@@ -6,22 +6,19 @@ const TableHeader = () => {
       <tr>
         <th scope="col" className="px-3 py-3"></th>
         <th scope="col" className="px-3 py-3">
-          Nom Terrain
+          Nom
         </th>
         <th scope="col" className="px-3 py-3">
-          Type de terrain
+          Prénom
         </th>
         <th scope="col" className="px-3 py-3">
-          Activité
+          Email
         </th>
         <th scope="col" className="px-3 py-3">
-          Dimensions
+          Date inscription
         </th>
         <th scope="col" className="px-3 py-3">
-          Capacité max
-        </th>
-        <th scope="col" className="px-3 py-3">
-          Prix par heure (par personne)
+          Status
         </th>
       </tr>
     </thead>

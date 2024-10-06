@@ -1,24 +1,45 @@
 import React, { useState } from "react";
 
-const TableRow = ({ client, onSelect }) => {
+const TableRow = ({ client, onSelect, isSelected }) => {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
     onSelect(client.id);
   };
-
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  };
   return (
-    <tr>
+    <tr className={`${isSelected ? "bg-gray-200" : "bg-gray-100"}`}>
       <th scope="col" className="px-3 py-3">
-        <input type="checkbox" checked={isChecked} onChange={handleCheckboxChange} />
+        <input
+          type="checkbox"
+          checked={isChecked || isSelected}
+          onChange={handleCheckboxChange}
+          className="cursor-pointer"
+        />
       </th>
-      <td className="px-3 py-4 font-normal text-gray-600 whitespace-nowrap">{client.name}</td>
-      <td className="px-3 py-4">{client.type}</td>
-      <td className="px-3 py-4">{client.activity}</td>
-      <td className="px-3 py-4">{client.dimensions}</td>
-      <td className="px-3 py-4">{client.capacity}</td>
-      <td className="px-3 py-4">{client.price}</td>
+      <td
+        className={`px-3 py-4 font-normal whitespace-nowrap ${
+          isSelected ? "text-black" : "text-gray-500"
+        }`}
+      >
+        {client.Prenom}
+      </td>
+      <td className={`px-3 py-4 ${isSelected ? "text-black" : "text-gray-500"}`}>{client.Nom}</td>
+      <td className={`px-3 py-4 ${isSelected ? "text-black" : "text-gray-500"}`}>{client.Email}</td>
+      <td className={`px-3 py-4 ${isSelected ? "text-black" : "text-gray-500"}`}>
+        {formatDate(client.created_at)}
+      </td>
+      <td className={`px-3 py-4 ${isSelected ? "text-black" : "text-gray-500"}`}>
+        {client.capacity}
+      </td>
+      <td className="px-3 py-4"></td>
     </tr>
   );
 };
