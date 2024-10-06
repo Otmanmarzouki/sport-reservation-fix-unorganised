@@ -1,8 +1,11 @@
+// Calendar.js
 import React from "react";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import { renderEventContent } from "./EventRender/index";
 
-const Calendar = () => {
+const Calendar = ({ events, handleDateSelect }) => {
   const slotLabelFormat = {
     hour: "numeric",
     minute: "2-digit",
@@ -10,7 +13,7 @@ const Calendar = () => {
 
   return (
     <FullCalendar
-      plugins={[timeGridPlugin]}
+      plugins={[timeGridPlugin, interactionPlugin]}
       weekends={false}
       allDaySlot={false}
       locale={"fr"}
@@ -21,6 +24,10 @@ const Calendar = () => {
         center: "title",
         right: "next",
       }}
+      selectable={true}
+      select={handleDateSelect}
+      events={events}
+      eventContent={renderEventContent}
     />
   );
 };

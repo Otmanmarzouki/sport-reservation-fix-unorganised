@@ -1,7 +1,7 @@
+// NouvelleReservationComponent.js
 import React, { useEffect, useState } from "react";
-import FullCalendar from "@fullcalendar/react";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
+import { fetchTerrains, fetchReservations, addReservation } from "@/services/reservation/index";
+import Calendar from "./Calendar";
 import { FaUserCircle } from "react-icons/fa";
 
 const NouvelleReservationComponent = () => {
@@ -20,47 +20,14 @@ const NouvelleReservationComponent = () => {
   });
 
   useEffect(() => {
-    const getTerrains = async () => {
-      try {
-        const response = await fetch("http://127.0.0.1:8000/api/getTerrain");
-        const data = await response.json();
-        setTerrains(data);
-      } catch (error) {
-        console.error("Error fetching terrains:", error);
-      }
+    const fetchData = async () => {
+      const fetchedTerrains = await fetchTerrains();
+      setTerrains(fetchedTerrains);
+      const fetchedReservations = await fetchReservations();
+      setReservation(fetchedReservations);
     };
-    getTerrains();
+    fetchData();
   }, []);
-  useEffect(() => {
-    const getReservations = async () => {
-      try {
-        const response = await fetch("http://127.0.0.1:8000/api/getReservations");
-        const data = await response.json();
-        setReservation(data);
-      } catch (error) {
-        console.error("Error fetching Reservations:", error);
-      }
-    };
-    getReservations();
-  }, []);
-
-  const handleTerrainChange = (e) => {
-    setActivité(e.target.value);
-  };
-
-  // Handle date range selection from FullCalendar
-  const handleDateSelect = (selectInfo) => {
-    const { start, end } = selectInfo;
-    setSelectedDateRange({
-      startDate: start,
-      endDate: end,
-    });
-  };
-
-  const slotLabelFormat = {
-    hour: "numeric",
-    minute: "2-digit",
-  };
 
   const UpdateData = (e) => {
     setForm({
@@ -69,34 +36,12 @@ const NouvelleReservationComponent = () => {
     });
   };
 
-  const SubmitData = async (e) => {
-    e.preventDefault();
-
-    const formData = {
-      ...form,
-      activité,
-      DateDebut: selectedDateRange.startDate,
-      DateFin: selectedDateRange.endDate,
-    };
-
-    try {
-      const response = await fetch("http://127.0.0.1:8000/api/addReservation", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Form submitted successfully:", data);
-      } else {
-        console.error("Form submission failed:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    }
+  const handleDateSelect = (selectInfo) => {
+    const { start, end } = selectInfo;
+    setSelectedDateRange({
+      startDate: start,
+      endDate: end,
+    });
   };
 
   const getRandomColor = () => {
@@ -126,44 +71,32 @@ const NouvelleReservationComponent = () => {
     },
   }));
 
-  const renderEventContent = (eventInfo) => {
-    return (
-      <div
-        style={{
-          backgroundColor: eventInfo.event.backgroundColor,
-          padding: "5px",
-          borderRadius: "5px",
-          color: "#000",
-        }}
-      >
-        <div className="flex justify-between">
-          <span className="text-xs font-bold">{eventInfo.event.extendedProps.player}</span>
-          {eventInfo.event.extendedProps.icon}
-        </div>
-        <div className="text-xs">
-          <span>
-            {eventInfo.event.extendedProps.startTime} - {eventInfo.event.extendedProps.endTime}
-          </span>
-        </div>
-        <div style={{ marginTop: "5px", fontSize: "14px", fontWeight: "bold" }}>
-          <span className="text-xs font-bold">{eventInfo.event.extendedProps.activité}</span>
-        </div>
-      </div>
-    );
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = {
+      ...form,
+      activité,
+      DateDebut: selectedDateRange.startDate,
+      DateFin: selectedDateRange.endDate,
+    };
+    const result = await addReservation(formData);
+    if (result) {
+      console.log("Reservation successful:", result);
+    }
   };
 
   return (
     <main className="flex w-full bg-gray-100 overflow-y-auto">
       <div className="flex flex-col w-full space-y-8 py-4 px-4">
         <div className="flex w-full flex-col lg:flex-row gap-6">
-          <div className="flex w-full flex-col space-y-4">
+          <div className="flex w-full lg:w-2/3 flex-col space-y-4">
             <div className="flex lg:flex-row flex-col w-full lg:justify-evenly">
               <div className="flex w-full justify-center">
                 <select
                   data-te-select-init
                   className="py-1 rounded-md text-sm lg:px-8 border-2"
                   value={activité}
-                  onChange={handleTerrainChange}
+                  onChange={(e) => setActivité(e.target.value)}
                 >
                   <option value="">Select Terrain</option>
                   {terrains.map((terrain) => (
@@ -173,39 +106,14 @@ const NouvelleReservationComponent = () => {
                   ))}
                 </select>
               </div>
-
-              <div className="flex w-full justify-center">
-                <select data-te-select-init className="py-1 rounded-md text-sm lg:px-8 border-2">
-                  <option value="1">Payés et le reste</option>
-                  <option value="2">Option 2</option>
-                  <option value="3">Option 3</option>
-                </select>
-              </div>
             </div>
 
-            <FullCalendar
-              plugins={[timeGridPlugin, interactionPlugin]}
-              weekends={false}
-              allDaySlot={false}
-              locale={"fr"}
-              slotLabelFormat={slotLabelFormat}
-              navLinks={true}
-              headerToolbar={{
-                left: "prev",
-                center: "title",
-                right: "next",
-              }}
-              selectable={true}
-              select={handleDateSelect}
-              events={events}
-              eventContent={renderEventContent}
-            />
+            <Calendar events={events} handleDateSelect={handleDateSelect} />
           </div>
-
-          <div className="flex w-full flex-col lg:px-10">
+          <div className="flex flex-col w-full lg:w-1/3 ">
             <form
               className="flex flex-col bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-              onSubmit={SubmitData}
+              onSubmit={handleSubmit}
             >
               <div className="flex mb-4 text-lg font-semibold">
                 <h3>Informations personnelles</h3>
