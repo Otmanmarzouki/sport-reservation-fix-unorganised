@@ -15,6 +15,9 @@ const TableHeader = () => {
           Email
         </th>
         <th scope="col" className="px-3 py-3">
+          Telephone
+        </th>
+        <th scope="col" className="px-3 py-3">
           Date inscription
         </th>
         <th scope="col" className="px-3 py-3">

@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 
 const TableRow = ({ client, onSelect, isSelected }) => {
-  const [isChecked, setIsChecked] = useState(false);
-
   const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
     onSelect(client.id);
   };
   const formatDate = (dateString) => {
@@ -19,7 +16,7 @@ const TableRow = ({ client, onSelect, isSelected }) => {
       <th scope="col" className="px-3 py-3">
         <input
           type="checkbox"
-          checked={isChecked || isSelected}
+          checked={isSelected}
           onChange={handleCheckboxChange}
           className="cursor-pointer"
         />
@@ -33,12 +30,11 @@ const TableRow = ({ client, onSelect, isSelected }) => {
       </td>
       <td className={`px-3 py-4 ${isSelected ? "text-black" : "text-gray-500"}`}>{client.Nom}</td>
       <td className={`px-3 py-4 ${isSelected ? "text-black" : "text-gray-500"}`}>{client.Email}</td>
+      <td className={`px-3 py-4 ${isSelected ? "text-black" : "text-gray-500"}`}>{client.Tel}</td>
       <td className={`px-3 py-4 ${isSelected ? "text-black" : "text-gray-500"}`}>
         {formatDate(client.created_at)}
       </td>
-      <td className={`px-3 py-4 ${isSelected ? "text-black" : "text-gray-500"}`}>
-        {client.capacity}
-      </td>
+
       <td className="px-3 py-4"></td>
     </tr>
   );

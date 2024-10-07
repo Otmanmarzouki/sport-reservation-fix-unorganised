@@ -8,15 +8,19 @@ import { fetchClients, deleteClient } from "@/services/client/index";
 const Customers = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [searchValue, setSearchValue] = useState("");
-  const [filteredClients, setFilteredClients] = useState([]);
+  const [fetchedClients, setFetchedClients] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedClient = await fetchClients();
-      setFilteredClients(fetchedClient);
+      const clients = await fetchClients();
+      setFetchedClients(clients);
     };
     fetchData();
   }, []);
+
+  const handleSearchChange = (searchValue) => {
+    setSearchValue(searchValue);
+  };
 
   const handleDelete = async () => {
     const confirmDelete = window.confirm("Êtes-vous sûr de vouloir supprimer ce client?");
@@ -24,7 +28,8 @@ const Customers = () => {
 
     const success = await deleteClient(selectedRow);
     if (success) {
-      setFilteredClients(filteredClients.filter((client) => client.id !== selectedRow));
+      const updatedClients = fetchedClients.filter((client) => client.id !== selectedRow);
+      setFetchedClients(updatedClients); // Update the list after deletion
       setSelectedRow(null);
     }
   };
@@ -37,9 +42,14 @@ const Customers = () => {
     console.log("Edit client with ID:", selectedRow);
   };
 
-  const handleSearchChange = (searchValue) => {
-    setSearchValue(searchValue);
-  };
+  const filteredClients = fetchedClients.filter((client) => {
+    const lowercasedSearchValue = searchValue.toLowerCase();
+    return (
+      client.Prenom.toLowerCase().includes(lowercasedSearchValue) ||
+      client.Nom.toLowerCase().includes(lowercasedSearchValue) ||
+      client.Email.toLowerCase().includes(lowercasedSearchValue)
+    );
+  });
 
   return (
     <main className="flex flex-col w-full bg-gray-100 overflow-y-auto px-2 lg:px-4 space-y-8">
