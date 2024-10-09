@@ -21,7 +21,7 @@ const TableRow = ({ client, onSelect, isSelected }) => {
   };
 
   return (
-    <tr className={`${isSelected ? "bg-gray-200" : "bg-gray-100"}`} onClick={handleRowClick}>
+    <tr className={`${isSelected ? "bg-gray-200" : "bg-gray-100"}`}>
       <th scope="col" className="px-3 py-3">
         <input
           type="checkbox"
