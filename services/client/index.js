@@ -28,3 +28,10 @@ export const deleteClient = async (clientId) => {
     return false;
   }
 };
+export const fetchClientById = async (id) => {
+  const response = await fetch(`/api/clients/${id}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch client data");
+  }
+  return await response.json();
+};
