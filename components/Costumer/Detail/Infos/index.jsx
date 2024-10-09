@@ -9,10 +9,7 @@ export default function ContactInformation({ email, telephone, dob, registration
         <div className="w-1/2">Telephone:</div>
         <div className="w-1/2">{telephone}</div>
       </div>
-      <div className="flex flex-row">
-        <div className="w-1/2">Date de naissance:</div>
-        <div className="w-1/2">{dob}</div>
-      </div>
+
       <div className="flex flex-row">
         <div className="w-1/2">Date inscription:</div>
         <div className="w-1/2">{registrationDate}</div>

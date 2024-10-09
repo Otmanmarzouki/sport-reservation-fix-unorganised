@@ -29,7 +29,7 @@ export const deleteClient = async (clientId) => {
   }
 };
 export const fetchClientById = async (id) => {
-  const response = await fetch(`/api/clients/${id}`);
+  const response = await fetch(`http://127.0.0.1:8000/api/client/${id}`);
   if (!response.ok) {
     throw new Error("Failed to fetch client data");
   }

@@ -10,7 +10,7 @@ const TableRow = ({ client, onSelect, isSelected }) => {
   };
 
   const handleRowClick = () => {
-    router.push(`/clients/${client.id}`);
+    router.push(`/costumer/${client.id}`);
   };
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -21,7 +21,7 @@ const TableRow = ({ client, onSelect, isSelected }) => {
   };
 
   return (
-    <tr className={`${isSelected ? "bg-gray-200" : "bg-gray-100"}`}>
+    <tr className={`${isSelected ? "bg-gray-200" : "bg-gray-100"}`} onClick={handleRowClick}>
       <th scope="col" className="px-3 py-3">
         <input
           type="checkbox"
