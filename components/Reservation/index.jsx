@@ -1,12 +1,16 @@
-// NouvelleReservationComponent.js
 import React, { useEffect, useState } from "react";
 import { fetchTerrains, fetchReservations, addReservation } from "@/services/reservation/index";
 import Calendar from "./Calendar";
 import { FaUserCircle } from "react-icons/fa";
 
+const getRandomColor = () => {
+  const colors = ["#FFDDC1", "#C1FFD7", "#D1C1FF", "#FFC1C1", "#FFF0C1"];
+  return colors[Math.floor(Math.random() * colors.length)];
+};
+
 const NouvelleReservationComponent = () => {
   const [terrains, setTerrains] = useState([]);
-  const [reservation, setReservation] = useState([]);
+  const [reservations, setReservations] = useState([]);
   const [activité, setActivité] = useState();
   const [selectedDateRange, setSelectedDateRange] = useState({
     startDate: "",
@@ -17,14 +21,26 @@ const NouvelleReservationComponent = () => {
     Nom: "",
     Email: "",
     Tel: "",
+    Sexe: "",
+    details: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedTerrains = await fetchTerrains();
-      setTerrains(fetchedTerrains);
-      const fetchedReservations = await fetchReservations();
-      setReservation(fetchedReservations);
+      setLoading(true);
+      try {
+        const fetchedTerrains = await fetchTerrains();
+        setTerrains(fetchedTerrains);
+        const fetchedReservations = await fetchReservations();
+        setReservations(fetchedReservations);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setErrorMessage("Failed to fetch data. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData();
   }, []);
@@ -44,12 +60,7 @@ const NouvelleReservationComponent = () => {
     });
   };
 
-  const getRandomColor = () => {
-    const colors = ["#FFDDC1", "#C1FFD7", "#D1C1FF", "#FFC1C1", "#FFF0C1"];
-    return colors[Math.floor(Math.random() * colors.length)];
-  };
-
-  const events = reservation.map((res) => ({
+  const events = reservations.map((res) => ({
     title: res.terrain.activité,
     start: res.DateDebut,
     end: res.DateFin,
@@ -73,21 +84,42 @@ const NouvelleReservationComponent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!selectedDateRange.startDate || !selectedDateRange.endDate) {
+      setErrorMessage("Please select a date range.");
+      return;
+    }
     const formData = {
       ...form,
       activité,
       DateDebut: selectedDateRange.startDate,
       DateFin: selectedDateRange.endDate,
     };
-    const result = await addReservation(formData);
-    if (result) {
-      console.log("Reservation successful:", result);
+    console.log(formData);
+
+    setLoading(true);
+    try {
+      const result = await addReservation(formData);
+
+      setForm({
+        Prenom: "",
+        Nom: "",
+        Email: "",
+        Tel: "",
+        Sexe: "",
+      });
+      setSelectedDateRange({ startDate: "", endDate: "" });
+    } catch (error) {
+      console.error("Error adding reservation:", error);
+      setErrorMessage("Failed to add reservation. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <main className="flex w-full bg-gray-100 overflow-y-auto">
       <div className="flex flex-col w-full space-y-8 py-4 px-4">
+        {errorMessage && <div className="bg-red-500 text-white p-2 rounded">{errorMessage}</div>}
         <div className="flex w-full flex-col lg:flex-row gap-6">
           <div className="flex w-full lg:w-2/3 flex-col space-y-4">
             <div className="flex lg:flex-row flex-col w-full lg:justify-evenly">
@@ -107,7 +139,6 @@ const NouvelleReservationComponent = () => {
                 </select>
               </div>
             </div>
-
             <Calendar events={events} handleDateSelect={handleDateSelect} />
           </div>
           <div className="flex flex-col w-full lg:w-1/3 ">
@@ -118,45 +149,31 @@ const NouvelleReservationComponent = () => {
               <div className="flex mb-4 text-lg font-semibold">
                 <h3>Informations personnelles</h3>
               </div>
-              <div className="flex justify-center mb-4">
-                <input
-                  className="shadow w-full appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  name="Prenom"
-                  type="text"
-                  placeholder="Prénom"
+              {["Prenom", "Nom", "Tel", "Email"].map((field) => (
+                <div className="flex justify-center mb-4" key={field}>
+                  <input
+                    className="shadow w-full appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    name={field}
+                    type={field === "Email" ? "email" : "text"}
+                    placeholder={field === "Tel" ? "Téléphone" : field}
+                    onChange={UpdateData}
+                    value={form[field]}
+                  />
+                </div>
+              ))}
+              <div className="flex mb-4">
+                <select
+                  className="shadow w-full appearance-none border rounded py-2 px-3 text-gray-400 leading-tight focus:outline-none focus:shadow-outline"
+                  name="Sexe"
+                  value={form.Sexe}
                   onChange={UpdateData}
-                />
+                >
+                  <option value="">Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
               </div>
-              <div className="flex justify-center mb-4">
-                <input
-                  className="shadow w-full appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  name="Nom"
-                  type="text"
-                  placeholder="Nom"
-                  onChange={UpdateData}
-                />
-              </div>
-
-              <div className="flex justify-center mb-4">
-                <input
-                  className="shadow w-full appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  name="Tel"
-                  type="text"
-                  placeholder="Téléphone"
-                  onChange={UpdateData}
-                />
-              </div>
-
-              <div className="flex justify-center mb-4">
-                <input
-                  className="shadow w-full appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  name="Email"
-                  type="email"
-                  placeholder="Email"
-                  onChange={UpdateData}
-                />
-              </div>
-
               <div className="flex mb-4 text-lg font-semibold">
                 <h3>Détails sport</h3>
               </div>
@@ -167,15 +184,16 @@ const NouvelleReservationComponent = () => {
                   type="text"
                   placeholder="Détails"
                   onChange={UpdateData}
+                  value={form.details}
                 />
               </div>
-
               <div className="flex justify-center">
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white px-8 py-2 rounded focus:outline-none focus:shadow-outline"
                   type="submit"
+                  disabled={loading}
                 >
-                  Procéder
+                  {loading ? "Loading..." : "Procéder"}
                 </button>
               </div>
             </form>
