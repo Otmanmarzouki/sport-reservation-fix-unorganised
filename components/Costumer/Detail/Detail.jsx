@@ -23,7 +23,7 @@ export default function Detail() {
 
   const handleLogoChange = async (e) => {
     const file = e.target.files[0];
-    console.log("Selected file:", file); // Debugging line
+
     if (!file) return;
 
     const formData = new FormData();
@@ -52,7 +52,7 @@ export default function Detail() {
               ? `http://127.0.0.1:8000/storage/${client.data.logo}`
               : `http://127.0.0.1:8000/storage/logos/avatar/maleAvatar.png`
           }
-          handleImageChange={handleLogoChange} // Pass the logo change handler
+          handleImageChange={handleLogoChange}
         />
         <div className="flex flex-col lg:flex-row lg:space-x-4 space-y-4 lg:space-y-0">
           <ContactInformation
