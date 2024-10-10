@@ -52,6 +52,7 @@ export default function Detail() {
               ? `http://127.0.0.1:8000/storage/${client.data.logo}`
               : `http://127.0.0.1:8000/storage/logos/avatar/maleAvatar.png`
           }
+          gender={client.data.sexe}
           handleImageChange={handleLogoChange}
         />
         <div className="flex flex-col lg:flex-row lg:space-x-4 space-y-4 lg:space-y-0">

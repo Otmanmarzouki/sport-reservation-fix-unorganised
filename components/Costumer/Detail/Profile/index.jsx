@@ -4,6 +4,11 @@ import { BiMaleSign, BiFemaleSign } from "react-icons/bi";
 import { FiEdit } from "react-icons/fi";
 
 export default function ClientProfile({ name, gender, avatarSrc, handleImageChange }) {
+  // Set default values for gender and label
+  const isMale = gender === "Male"; // Adjust based on your gender string
+  const genderIcon = isMale ? <BiMaleSign /> : <BiFemaleSign />;
+  const genderLabel = isMale ? "Monsieur" : "Madame";
+
   return (
     <div className="flex lg:flex-row flex-col w-full rounded-xl lg:space-x-3 space-y-3 items-center">
       <div>
@@ -28,8 +33,8 @@ export default function ClientProfile({ name, gender, avatarSrc, handleImageChan
         <div className="text-sm lg:text-lg text-black font-semibold">{name}</div>
         <div className="flex flex-row text-slate-500 font-medium items-center space-x-4">
           <div className="flex flex-row items-center space-x-2 w-full">
-            <div>{gender === "male" ? <BiMaleSign /> : <BiFemaleSign />}</div>
-            <div className="text-sm lg:text-lg">{gender === "male" ? "Monsieur" : "Madame"}</div>
+            <div>{genderIcon}</div>
+            <div className="text-sm lg:text-lg">{genderLabel}</div>
           </div>
           <div>
             <FiEdit />

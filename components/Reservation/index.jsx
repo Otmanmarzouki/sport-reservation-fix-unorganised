@@ -22,7 +22,6 @@ const NouvelleReservationComponent = () => {
     Email: "",
     Tel: "",
     Sexe: "",
-    details: "",
   });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -94,7 +93,6 @@ const NouvelleReservationComponent = () => {
       DateDebut: selectedDateRange.startDate,
       DateFin: selectedDateRange.endDate,
     };
-    console.log(formData);
 
     setLoading(true);
     try {
@@ -183,8 +181,6 @@ const NouvelleReservationComponent = () => {
                   name="details"
                   type="text"
                   placeholder="Détails"
-                  onChange={UpdateData}
-                  value={form.details}
                 />
               </div>
               <div className="flex justify-center">
