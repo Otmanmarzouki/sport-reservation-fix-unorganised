@@ -23,12 +23,14 @@ export default function Detail() {
 
   const handleLogoChange = async (e) => {
     const file = e.target.files[0];
+    console.log("Selected file:", file); // Debugging line
     if (!file) return;
 
     const formData = new FormData();
     formData.append("logo", file);
     try {
       const response = await uploadClientLogo(id, formData);
+      console.log("Upload response:", response);
       setClient((prevClient) => ({
         ...prevClient,
         data: { ...prevClient.data, logo: response.logo },
@@ -40,18 +42,17 @@ export default function Detail() {
 
   if (!client) return <div>Loading...</div>;
 
-  return (
+  http: return (
     <main className="w-full bg-gray-100 overflow-y-auto">
       <div className="flex flex-col w-full bg-gray-100 p-2 lg:p-10 space-y-6">
         <ClientProfile
           name={`${client.data.Prenom} ${client.data.Nom}`}
-          avatarSrc="/img/maleAvatar.png"
-          logoSrc={
+          avatarSrc={
             client.data.logo
               ? `http://127.0.0.1:8000/storage/${client.data.logo}`
-              : "/img/maleAvatar.png"
+              : `http://127.0.0.1:8000/storage/logos/avatar/maleAvatar.png`
           }
-          handleLogoChange={handleLogoChange}
+          handleImageChange={handleLogoChange} // Pass the logo change handler
         />
         <div className="flex flex-col lg:flex-row lg:space-x-4 space-y-4 lg:space-y-0">
           <ContactInformation
