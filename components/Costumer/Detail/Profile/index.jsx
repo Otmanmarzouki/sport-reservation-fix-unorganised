@@ -4,8 +4,7 @@ import { BiMaleSign, BiFemaleSign } from "react-icons/bi";
 import { FiEdit } from "react-icons/fi";
 
 export default function ClientProfile({ name, gender, avatarSrc, handleImageChange }) {
-  // Set default values for gender and label
-  const isMale = gender === "Male"; // Adjust based on your gender string
+  const isMale = gender === "Male";
   const genderIcon = isMale ? <BiMaleSign /> : <BiFemaleSign />;
   const genderLabel = isMale ? "Monsieur" : "Madame";
 
