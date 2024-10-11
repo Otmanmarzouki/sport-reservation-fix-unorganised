@@ -12,13 +12,13 @@ import {
   FaHeadset,
   FaCog,
   FaSignOutAlt,
-} from "react-icons/fa"; 
+} from "react-icons/fa";
 
 export default function Sidebar() {
   return (
-    <div className="w-43 h-screen bg-orange-500 text-white">
+    <div className="w-42 h-screen bg-orange-400 text-white">
       <div className="p-6">
-        <ul className="space-y-4"> 
+        <ul className="flex flex-col space-y-6">
           <li>
             <SidebarItem icon={<FaHome />} text="Accueil" />
           </li>
@@ -43,9 +43,9 @@ export default function Sidebar() {
         </ul>
       </div>
 
-      <div className="p-6">
-        <ul className="space-y-4">
-          <li className="mt-20">
+      <div className="p-6 mt-24 flex flex-col space-y-6">
+        <ul className="flex flex-col space-y-6">
+          <li>
             <SidebarItem icon={<FaBullhorn />} text="Marketing" />
           </li>
           <li>
@@ -54,7 +54,7 @@ export default function Sidebar() {
           <li>
             <SidebarItem icon={<FaCog />} text="Paramètres" />
           </li>
-          <li className="mt-5 w-full border-t-2 border-white pt-3"> 
+          <li className="mt-6 w-full border-t-2 border-white pt-3">
             <SidebarItem icon={<FaSignOutAlt />} text="Déconnexion" />
           </li>
         </ul>
