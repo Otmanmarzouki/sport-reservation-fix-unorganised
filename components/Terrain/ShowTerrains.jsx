@@ -90,10 +90,10 @@ const ShowTerrains = () => {
                     <td className="px-3 py-4">{terrain.Capacité}</td>
                     <td className="px-3 py-4">{terrain.prix} €</td>
                     <td className="px-1 py-4">
-                      <div className="flex flex-row space-x-3 text-lg">
+                      <div className="flex flex-row  text-lg">
                         <button
                           className="bg-transparent bg-gray-200 rounded-lg text-blue-500 p-2"
-                          onClick={() => handleEditClick(terrain.id)} // Call the modified handleEditClick function
+                          onClick={() => handleEditClick(terrain.id)}
                         >
                           <FiEdit />
                         </button>
