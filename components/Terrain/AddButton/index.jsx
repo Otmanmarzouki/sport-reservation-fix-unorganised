@@ -1,5 +1,5 @@
 import React from "react";
-import { validateTerrainData } from "./validate"; // Adjust the import path accordingly
+import { validateTerrainData } from "./validate";
 
 export default function AddButton({
   className,
@@ -13,8 +13,8 @@ export default function AddButton({
     const errors = validateTerrainData(terrainData);
 
     if (Object.keys(errors).length > 0) {
-      setErrors(errors); // Set errors if validation fails
-      return; // Stop further execution
+      setErrors(errors);
+      return;
     }
 
     setIsLoading(true);

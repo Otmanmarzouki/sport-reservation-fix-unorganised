@@ -3,10 +3,11 @@ import { useRouter } from "next/router";
 import ReusableInput from "@/components/Terrain/Input";
 import AddButton from "@/components/Terrain/AddButton";
 import ReusableDropdown from "@/components/Terrain/Dropdown";
+import SkeletonLoader from "@/components/Loader/index";
 
 export default function EditTerrains() {
   const router = useRouter();
-  const { id } = router.query; // Get the terrain ID from the URL
+  const { id } = router.query;
   const [terrain, setTerrain] = useState(null);
 
   useEffect(() => {
@@ -33,13 +34,6 @@ export default function EditTerrains() {
     e.preventDefault();
     if (!terrain) return;
 
-    const updatedTerrain = {
-      ...terrain, // Spread existing terrain data
-      // If there are any changes you need to apply, do it here, i.e.:
-      // Nom_Terrain: nameTerrain,  // In case of modifications to the existing fields.
-    };
-
-    // Logic to send the updated data to your API
     await fetch(`http://127.0.0.1:8000/api/updateTerrain/${id}`, {
       method: "PUT",
       headers: {
@@ -48,12 +42,17 @@ export default function EditTerrains() {
       body: JSON.stringify(updatedTerrain),
     });
 
-    // Optionally redirect after successful update
     router.push("/terrain");
   };
 
   if (!terrain) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center  w-full bg-gray-100">
+        <div className="w-full lg:w-3/4 bg-gray-50  shadow-md rounded p-4">
+          <SkeletonLoader />
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -102,7 +101,6 @@ export default function EditTerrains() {
               <div className="flex flex-col w-full">
                 <div className="lg:mx-0 mx-5 text-gray-400 text-sm">Activité:</div>
                 <ReusableDropdown
-                  options={activity}
                   initialValue={terrain.activity}
                   onChange={(value) => setTerrain({ ...terrain, activity: value })}
                 />
@@ -111,7 +109,6 @@ export default function EditTerrains() {
               <div className="flex flex-col w-full ">
                 <div className="lg:mx-0 mx-5 text-gray-400 text-sm">Type de terrain:</div>
                 <ReusableDropdown
-                  options={terrainType}
                   initialValue={terrain.type_Terrain}
                   onChange={(value) => setTerrain({ ...terrain, type_Terrain: value })}
                 />
