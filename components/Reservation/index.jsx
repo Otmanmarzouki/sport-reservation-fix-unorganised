@@ -33,7 +33,7 @@ const NouvelleReservationComponent = () => {
         const fetchedTerrains = await fetchTerrains();
         setTerrains(fetchedTerrains);
         const fetchedReservations = await fetchReservations();
-        setReservations(fetchedReservations);
+        setReservations(Array.isArray(fetchedReservations) ? fetchedReservations : []);
       } catch (error) {
         console.error("Error fetching data:", error);
         setErrorMessage("Failed to fetch data. Please try again later.");
