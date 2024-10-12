@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ReusableInput from "@/components/Terrain/Input";
 import AddButton from "@/components/Terrain/AddButton";
-import ReusableDropdown from "@/components/Terrain/Dropdown";
+import ReusableDropdown from "@/components/Dropdown";
 
 const activity = [
   { value: 1, label: "Paddle" },

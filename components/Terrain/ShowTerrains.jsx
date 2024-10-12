@@ -2,10 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { FiEdit } from "react-icons/fi";
-import DeleteButton from "@/components/Terrain/DeleteButton";
+import { AiOutlineDelete } from "react-icons/ai";
+import CustomButton from "@/components/CustomButton/index";
+import { deleteTerrain } from "@/services/terrain/index";
+import Modal from "@/components/Modal/index";
 
 const ShowTerrains = () => {
   const [terrains, setTerrains] = useState([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedTerrainId, setSelectedTerrainId] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -32,14 +37,35 @@ const ShowTerrains = () => {
   const handleEditClick = (terrainId) => {
     router.push(`/terrain/edit/${terrainId}`);
   };
+
+  const openDeleteModal = (terrainId) => {
+    setSelectedTerrainId(terrainId);
+    setShowDeleteModal(true);
+  };
+
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+    setSelectedTerrainId(null);
+  };
+
+  const confirmDelete = async () => {
+    if (selectedTerrainId) {
+      const success = await deleteTerrain(selectedTerrainId);
+      if (success) {
+        handleDeleteSuccess(selectedTerrainId);
+      }
+    }
+    closeDeleteModal();
+  };
+
   return (
     <>
       <main className="flex flex-col w-full bg-gray-100 overflow-y-auto px-4 space-y-8">
         <div className="flex flex-row justify-between lg:px-6 pt-8">
-          <div className=" mx-2">
+          <div className="mx-2">
             <h3 className="lg:text-2xl text-lg font-semibold">Terrains</h3>
           </div>
-          <div className=" mx-2">
+          <div className="mx-2">
             <Link href="/addTerrain" passHref>
               <button className="inline-flex px-3 py-2 text-white bg-blue-500 rounded-2xl text-xs lg:text-sm">
                 Ajouter un Terrain
@@ -90,16 +116,16 @@ const ShowTerrains = () => {
                     <td className="px-3 py-4">{terrain.Capacité}</td>
                     <td className="px-3 py-4">{terrain.prix} €</td>
                     <td className="px-1 py-4">
-                      <div className="flex flex-row  text-lg">
-                        <button
+                      <div className="flex flex-row text-lg">
+                        <CustomButton
                           className="bg-transparent bg-gray-200 rounded-lg text-blue-500 p-2"
+                          icon={<FiEdit />}
                           onClick={() => handleEditClick(terrain.id)}
-                        >
-                          <FiEdit />
-                        </button>
-                        <DeleteButton
-                          terrainId={terrain.id}
-                          onDeleteSuccess={handleDeleteSuccess}
+                        />
+                        <CustomButton
+                          className="bg-transparent bg-gray-200 rounded-lg text-red-500 p-2"
+                          icon={<AiOutlineDelete />}
+                          onClick={() => openDeleteModal(terrain.id)}
                         />
                       </div>
                     </td>
@@ -109,6 +135,14 @@ const ShowTerrains = () => {
             </table>
           </div>
         </div>
+        {showDeleteModal && (
+          <Modal
+            showModal={showDeleteModal}
+            body={<p>Êtes-vous sûr de vouloir le supprimer  ?</p>}
+            onClose={closeDeleteModal}
+            onSave={confirmDelete}
+          />
+        )}
       </main>
     </>
   );

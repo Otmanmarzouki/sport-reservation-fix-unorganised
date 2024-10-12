@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import ReusableInput from "@/components/Terrain/Input";
 import AddButton from "@/components/Terrain/AddButton";
-import ReusableDropdown from "@/components/Terrain/Dropdown";
+import ReusableDropdown from "@/components/Dropdown";
 import SkeletonLoader from "@/components/Loader/index";
 
 export default function EditTerrains() {
@@ -101,7 +101,8 @@ export default function EditTerrains() {
               <div className="flex flex-col w-full">
                 <div className="lg:mx-0 mx-5 text-gray-400 text-sm">Activité:</div>
                 <ReusableDropdown
-                  initialValue={terrain.activity}
+                  initialValue={terrain.activité}
+                  value={terrain.activité}
                   onChange={(value) => setTerrain({ ...terrain, activity: value })}
                 />
               </div>
