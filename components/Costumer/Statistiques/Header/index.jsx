@@ -1,9 +1,9 @@
 import React from "react";
 
-const Header = ({ title }) => {
+const Header = ({ title, className = "text-xl" }) => {
   return (
     <div className="my-6">
-      <h1 className="text-xl font-semibold">{title}</h1>
+      <h1 className={`${className} font-semibold`}>{title}</h1>
     </div>
   );
 };

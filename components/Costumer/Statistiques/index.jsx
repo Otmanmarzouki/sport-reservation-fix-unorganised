@@ -35,7 +35,7 @@ const NombreDeClientSport = () => {
   return (
     <main className="flex w-full bg-gray-100 overflow-y-auto px-4">
       <div className="w-full bg-gray-100 p-4">
-        <Header title="Nombre de client par sport" />
+        <Header title="Nombre de client par sport" className="text-2xl" />
 
         <div className="mx-auto grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
           {sports.map((sport, index) => (
@@ -44,15 +44,17 @@ const NombreDeClientSport = () => {
         </div>
 
         <div className="flex flex-col xl:flex-row mx-auto gap-8 justify-between">
-          <div className=" w-1/3">
+          <div className=" lg:w-1/3 w-full">
             <div className="flex flex-col p-2 sm:p-3 xl:p-4 ">
-              <h2 className="text-lg font-bold">Répartition des clients par sport</h2>
+              <Header title="Répartition des clients par sport" className="text-xl" />
+
               <SportPieChart />
             </div>
           </div>
-          <div className="w-1/3">
+          <div className="lg:w-1/3 w-full">
             <div className="flex flex-col p-2 sm:p-3 xl:p-4 ">
-              <h2 className="text-xs font-bold">Nombre de client par statut</h2>
+              <Header title="Nombre de client par statut" className="text-sm font-bold" />
+
               <ClientStatus />
             </div>
           </div>
