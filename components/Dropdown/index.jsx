@@ -20,7 +20,7 @@ function ReusableDropdown({ initialValue, options = [], onChange }) {
         >
           {options.length > 0 ? (
             options.map((option) => (
-              <option key={option.value} value={option.value}>
+              <option key={option.value} value={option.label}>
                 {option.label}
               </option>
             ))

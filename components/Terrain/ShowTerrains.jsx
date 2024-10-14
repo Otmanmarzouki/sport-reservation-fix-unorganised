@@ -66,7 +66,7 @@ const ShowTerrains = () => {
             <h3 className="lg:text-2xl text-lg font-semibold">Terrains</h3>
           </div>
           <div className="mx-2">
-            <Link href="/addTerrain" passHref>
+            <Link href="/terrain/ajouter" passHref>
               <button className="inline-flex px-3 py-2 text-white bg-blue-500 rounded-2xl text-xs lg:text-sm">
                 Ajouter un Terrain
               </button>
