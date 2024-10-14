@@ -5,7 +5,6 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const SportPieChart = ({ sportsData }) => {
-  // Prepare dynamic data for the chart
   const labels = sportsData.map((sport) => sport.name);
   const dataValues = sportsData.map((sport) => sport.count);
   const backgroundColors = sportsData.map((sport) =>
