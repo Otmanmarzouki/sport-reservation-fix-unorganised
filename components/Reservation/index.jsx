@@ -11,6 +11,7 @@ const getRandomColor = () => {
 const NouvelleReservationComponent = () => {
   const [terrains, setTerrains] = useState([]);
   const [reservations, setReservations] = useState([]);
+  const [filteredReservations, setFilteredReservations] = useState([]);
   const [activité, setActivité] = useState();
   const [selectedDateRange, setSelectedDateRange] = useState({
     startDate: "",
@@ -44,6 +45,15 @@ const NouvelleReservationComponent = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (activité) {
+      const filtered = reservations.filter((res) => res.terrain.activité === activité);
+      setFilteredReservations(filtered);
+    } else {
+      setFilteredReservations(reservations);
+    }
+  }, [activité, reservations]);
+
   const UpdateData = (e) => {
     setForm({
       ...form,
@@ -59,7 +69,7 @@ const NouvelleReservationComponent = () => {
     });
   };
 
-  const events = reservations.map((res) => ({
+  const events = filteredReservations.map((res) => ({
     title: res.terrain.activité,
     start: res.DateDebut,
     end: res.DateFin,
@@ -81,6 +91,11 @@ const NouvelleReservationComponent = () => {
     },
   }));
 
+  const handleActivityChange = async (e) => {
+    const selectedActivity = e.target.value;
+    setActivité(selectedActivity);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedDateRange.startDate || !selectedDateRange.endDate) {
@@ -97,7 +112,6 @@ const NouvelleReservationComponent = () => {
     setLoading(true);
     try {
       const result = await addReservation(formData);
-
       setForm({
         Prenom: "",
         Nom: "",
@@ -123,10 +137,9 @@ const NouvelleReservationComponent = () => {
             <div className="flex lg:flex-row flex-col w-full lg:justify-evenly">
               <div className="flex w-full justify-center">
                 <select
-                  data-te-select-init
                   className="py-1 rounded-md text-sm lg:px-8 border-2"
                   value={activité}
-                  onChange={(e) => setActivité(e.target.value)}
+                  onChange={handleActivityChange}
                 >
                   <option value="">Select Terrain</option>
                   {terrains.map((terrain) => (
@@ -137,6 +150,7 @@ const NouvelleReservationComponent = () => {
                 </select>
               </div>
             </div>
+
             <Calendar events={events} handleDateSelect={handleDateSelect} />
           </div>
           <div className="flex flex-col w-full lg:w-1/3 ">
