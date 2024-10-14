@@ -4,14 +4,26 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const SportPieChart = () => {
+const SportPieChart = ({ sportsData }) => {
+  // Prepare dynamic data for the chart
+  const labels = sportsData.map((sport) => sport.name);
+  const dataValues = sportsData.map((sport) => sport.count);
+  const backgroundColors = sportsData.map((sport) =>
+    sport.color === "bg-blue-800"
+      ? "#1E3A8A"
+      : sport.color === "bg-orange-500"
+        ? "#F97316"
+        : "#60A5FA",
+  );
+
   const data = {
-    labels: ["Paddle", "Tennis", "Foot"],
+    labels,
     datasets: [
       {
         label: "Nombre de clients",
-        data: [90, 50, 100],
-        backgroundColor: ["#1E3A8A", "#F97316", "#60A5FA"],
+        data: dataValues,
+        backgroundColor: backgroundColors,
+        borderWidth: 0,
       },
     ],
   };
@@ -36,7 +48,6 @@ const SportPieChart = () => {
           usePointStyle: true,
           boxWidth: 10,
           padding: 10,
-
           generateLabels: function (chart) {
             const { data } = chart;
             const datasets = data.datasets[0];

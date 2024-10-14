@@ -24,7 +24,7 @@ const ShowTerrains = () => {
       })
         .then((res) => res.json())
         .then((resData) => {
-          setTerrains(resData);
+          setTerrains(Array.isArray(resData) ? resData : []);
         });
     }
     fetchData();
@@ -35,7 +35,7 @@ const ShowTerrains = () => {
   };
 
   const handleEditClick = (terrainId) => {
-    router.push(`/terrain/edit/${terrainId}`);
+    router.push(`/terrain/editer/${terrainId}`);
   };
 
   const openDeleteModal = (terrainId) => {
