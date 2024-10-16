@@ -4,6 +4,7 @@ import ClientStatus from "./ClientStatus";
 import Header from "./Header";
 import SportPieChart from "./PieChart";
 import useSportsData from "@/hooks/useSportsData";
+import Container from "@/components/Container";
 
 const NombreDeClientSport = () => {
   const { sportsData, loading, error } = useSportsData();
@@ -11,8 +12,8 @@ const NombreDeClientSport = () => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   return (
-    <main className="flex w-full bg-gray-100 overflow-y-auto px-4">
-      <div className="w-full bg-gray-100 p-4">
+    <Container>
+      <div className="w-full bg-gray-100 ">
         <Header title="Nombre de client par sport" className="text-2xl" />
 
         <div className="mx-auto grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
@@ -36,7 +37,7 @@ const NombreDeClientSport = () => {
           </div>
         </div>
       </div>
-    </main>
+    </Container>
   );
 };
 

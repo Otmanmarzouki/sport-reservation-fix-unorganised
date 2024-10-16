@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from "react-icons/md";
-
+import Container from "@/components/Container";
 export default function TauxOccupation() {
   const [openTab, setOpenTab] = useState(1);
   const [TerrainNum, setTerrainNum] = useState(1);
@@ -19,8 +19,8 @@ export default function TauxOccupation() {
   };
   return (
     <>
-      <main className="flex w-full bg-gray-100  overflow-y-auto">
-        <div className="flex flex-col w-full  p-1 lg:p-8 ">
+      <Container>
+        <div className="flex flex-col w-full ">
           <div className="flex  text-xl font-semibold pb-3">Taux doccupation</div>
           <div className="flex  flex-col space-y-5">
             <div className="flex flex-row  justify-between ">
@@ -213,7 +213,7 @@ export default function TauxOccupation() {
             <div className={openTab === 2 ? "block" : "hidden"}>test</div>
           </div>
         </div>
-      </main>
+      </Container>
     </>
   );
 }

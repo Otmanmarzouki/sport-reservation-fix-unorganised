@@ -1,6 +1,7 @@
 import React from "react";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import { FaBars } from "react-icons/fa";
 import Image from "next/image";
 import logo from "@/public/img/logo.png";
 import avatar from "@/public/img/avatar.jpg";
@@ -8,9 +9,17 @@ import avatar from "@/public/img/avatar.jpg";
 export default function Header({ handleToggle }) {
   return (
     <header className="flex items-center justify-between bg-white h-16 px-5 shadow-lg">
-      <button onClick={handleToggle} className="focus:outline-none">
-        <Image src={logo} width={120} height={120} alt="logo" />
+      {/* Toggle button for smaller screens */}
+      <button onClick={handleToggle} className="lg:hidden text-xl text-gray-800">
+        <FaBars />
       </button>
+
+      {/* Logo */}
+      <div className="hidden lg:block">
+        <Image src={logo} width={120} height={120} alt="logo" />
+      </div>
+
+      {/* Notification and User Info */}
       <div className="flex items-center space-x-4">
         <div className="relative">
           <button className="text-black focus:outline-none">
