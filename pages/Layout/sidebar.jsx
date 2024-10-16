@@ -32,7 +32,6 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   return (
     <>
-      {/* Overlay Effect on Mobile */}
       {isOpen && isMobile && (
         <div className="fixed inset-0 bg-black opacity-50 z-40 lg:hidden" onClick={toggleSidebar} />
       )}
@@ -43,12 +42,9 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
         } ${!isMobile ? "lg:translate-x-0" : ""}`}
       >
         <div className="p-6">
-          {/* Close Button for Mobile */}
           <button className="lg:hidden text-white mb-4" onClick={toggleSidebar}>
             <FaTimes />
           </button>
-
-          {/* Sidebar Menu */}
           <ul className="flex flex-col space-y-6">
             <li>
               <SidebarItem icon={<FaHome />} text="Accueil" onClick={toggleSidebar} />
