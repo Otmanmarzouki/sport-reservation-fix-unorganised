@@ -28,17 +28,20 @@ export default function Layout({ children }) {
     <div className="flex flex-col h-screen">
       <Header handleToggle={handleToggle} />
 
-      {/* Main Content with Sidebar */}
-      <div className="flex flex-row h-full overflow-hidden">
+      {isSidebarOpen && window.innerWidth < 1024 && (
+        <div className="fixed inset-0 bg-black opacity-50 z-40 lg:hidden" onClick={handleToggle} />
+      )}
+
+      <div className="flex h-full overflow-hidden">
         <div
-          className={`transition-all duration-300 transform ${
-            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } lg:translate-x-0 lg:flex`}
+          className={`fixed top-0 left-0 h-full bg-orange-400 text-white z-50 transition-transform duration-300 transform ${
+            isSidebarOpen ? "translate-x-0 w-full lg:w-64 opacity-90" : "-translate-x-full"
+          } lg:static lg:flex lg:w-64`}
         >
-          <Sidebar />
+          <Sidebar isOpen={isSidebarOpen} toggleSidebar={handleToggle} />
         </div>
 
-        <div className="flex-1 overflow-auto">{children}</div>
+        <div className={`flex-1 overflow-auto`}>{children}</div>
       </div>
     </div>
   );

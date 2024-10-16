@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import SidebarItem from "@/components/sidebar/Items"; // Ensure the import path is correct
+import SidebarItem from "@/components/sidebar/Items";
 import {
   FaHome,
   FaCalendarAlt,
@@ -33,18 +33,22 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   return (
     <>
       {isOpen && isMobile && (
-        <div className="fixed inset-0 bg-black opacity-50 z-40 lg:hidden" onClick={toggleSidebar} />
+        <div
+          className="fixed inset-0 bg-orange-400 opacity-80 z-40 lg:hidden"
+          onClick={toggleSidebar}
+        />
       )}
 
       <div
-        className={`fixed lg:static top-0 left-0 h-full lg:h-screen w-64 z-50 transition-transform transform bg-orange-400 text-white ${
-          isOpen && isMobile ? "translate-x-0" : "-translate-x-full"
-        } ${!isMobile ? "lg:translate-x-0" : ""}`}
+        className={`fixed lg:static top-0 left-0 h-full lg:h-screen z-50 transition-transform transform bg-orange-400 text-white ${
+          isOpen ? (isMobile ? "w-full translate-x-0" : "lg:w-64") : "-translate-x-full"
+        } lg:translate-x-0`}
       >
         <div className="p-6">
           <button className="lg:hidden text-white mb-4" onClick={toggleSidebar}>
             <FaTimes />
           </button>
+
           <ul className="flex flex-col space-y-6">
             <li>
               <SidebarItem icon={<FaHome />} text="Accueil" onClick={toggleSidebar} />
