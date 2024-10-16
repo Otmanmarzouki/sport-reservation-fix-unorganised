@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { fetchTerrains, fetchReservations, addReservation } from "@/services/reservation/index";
+import {
+  fetchTerrains,
+  fetchReservations,
+  addReservation,
+  cancelReservation,
+} from "@/services/reservation/index";
 import Calendar from "./Calendar";
 import { FaUserCircle } from "react-icons/fa";
+import Modal from "../Modal/index";
 
 const getRandomColor = () => {
   const colors = ["#FFDDC1", "#C1FFD7", "#D1C1FF", "#FFC1C1", "#FFF0C1"];
@@ -26,6 +32,8 @@ const NouvelleReservationComponent = () => {
   });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -88,10 +96,11 @@ const NouvelleReservationComponent = () => {
       }),
       player: "Joueurs",
       icon: <FaUserCircle className="text-gray-600" />,
+      id: res.id,
     },
   }));
 
-  const handleActivityChange = async (e) => {
+  const handleActivityChange = (e) => {
     const selectedActivity = e.target.value;
     setActivité(selectedActivity);
   };
@@ -111,7 +120,7 @@ const NouvelleReservationComponent = () => {
 
     setLoading(true);
     try {
-      const result = await addReservation(formData);
+      await addReservation(formData);
       setForm({
         Prenom: "",
         Nom: "",
@@ -126,6 +135,17 @@ const NouvelleReservationComponent = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleEventClick = () => {
+    console.log("Event clicked");
+
+    setShowModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    setSelectedEvent(null); // Clear the selected event
   };
 
   return (
@@ -151,7 +171,11 @@ const NouvelleReservationComponent = () => {
               </div>
             </div>
 
-            <Calendar events={events} handleDateSelect={handleDateSelect} />
+            <Calendar
+              events={events}
+              handleDateSelect={handleDateSelect}
+              handleEventClick={handleEventClick}
+            />
           </div>
           <div className="flex flex-col w-full lg:w-1/3 ">
             <form
@@ -210,6 +234,14 @@ const NouvelleReservationComponent = () => {
           </div>
         </div>
       </div>
+      {showModal && (
+        <Modal
+          showModal={showModal}
+          body="Would you like to cancel this event?"
+          onClose={handleModalClose}
+          onSave={handleEventCancel}
+        />
+      )}
     </main>
   );
 };

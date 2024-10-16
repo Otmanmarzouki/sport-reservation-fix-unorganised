@@ -5,7 +5,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { renderEventContent } from "./EventRender/index";
 
-const Calendar = ({ events, handleDateSelect }) => {
+const Calendar = ({ events, handleDateSelect, handleEventClick }) => {
   const slotLabelFormat = {
     hour: "numeric",
     minute: "2-digit",
@@ -28,6 +28,7 @@ const Calendar = ({ events, handleDateSelect }) => {
       select={handleDateSelect}
       events={events}
       eventContent={renderEventContent}
+      eventClick={handleEventClick}
     />
   );
 };
