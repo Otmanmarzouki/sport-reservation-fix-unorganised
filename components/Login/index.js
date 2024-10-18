@@ -41,7 +41,7 @@ export default function AuthForm() {
             S'inscrire
           </button>
         </div>
-        <form className="form-horizontal w-3/4 mx-auto">
+        <form className="form-horizontal  mx-auto">
           {isSignUp && (
             <FormInput
               label="Name"
@@ -57,7 +57,7 @@ export default function AuthForm() {
             onChange={(e) => setEmail(e.target.value)}
           />
           <FormInput
-            label="Password"
+            label="Mot de passe"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}

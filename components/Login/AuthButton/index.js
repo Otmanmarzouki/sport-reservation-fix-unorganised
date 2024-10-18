@@ -4,10 +4,12 @@ import { useRouter } from "next/navigation";
 export default function AuthButton({ isSignUp, name, email, password }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState("");
 
   const handleAuth = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setErrors("");
 
     const url = isSignUp ? "http://127.0.0.1:8000/api/adduser" : "http://127.0.0.1:8000/api/login";
     const body = isSignUp
@@ -25,7 +27,8 @@ export default function AuthButton({ isSignUp, name, email, password }) {
       });
 
       if (!response.ok) {
-        throw new Error(isSignUp ? "Registration failed" : "Login failed");
+        setErrors(isSignUp ? "Email ou Nom déjà utilisé" : "Échec de la connexion");
+        return;
       }
 
       const data = await response.json();
@@ -33,6 +36,7 @@ export default function AuthButton({ isSignUp, name, email, password }) {
       router.push("/home");
     } catch (err) {
       console.error(err);
+      setErrors("Une erreur s'est produite. Veuillez réessayer.");
     } finally {
       setLoading(false);
     }
@@ -67,6 +71,9 @@ export default function AuthButton({ isSignUp, name, email, password }) {
           "Se connecter"
         )}
       </button>
+      {errors && (
+        <span className="flex items-center justify-center text-red-600 text-xs">{errors}</span>
+      )}
     </div>
   );
 }
