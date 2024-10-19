@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { auth } from "@/services/auth";
 
 export default function AuthButton({ isSignUp, name, email, password }) {
   const router = useRouter();
@@ -10,33 +11,12 @@ export default function AuthButton({ isSignUp, name, email, password }) {
     e.preventDefault();
     setLoading(true);
     setErrors("");
-
-    const url = isSignUp ? "http://127.0.0.1:8000/api/adduser" : "http://127.0.0.1:8000/api/login";
-    const body = isSignUp
-      ? JSON.stringify({ name, email, password })
-      : JSON.stringify({ email, password });
-
     try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: body,
-      });
-
-      if (!response.ok) {
-        setErrors(isSignUp ? "Email ou Nom déjà utilisé" : "Échec de la connexion");
-        return;
-      }
-
-      const data = await response.json();
+      const data = await auth(isSignUp, name, email, password);
       localStorage.setItem("token", data.token);
       router.push("/home");
     } catch (err) {
-      console.error(err);
-      setErrors("Une erreur s'est produite. Veuillez réessayer.");
+      setErrors(err.message);
     } finally {
       setLoading(false);
     }

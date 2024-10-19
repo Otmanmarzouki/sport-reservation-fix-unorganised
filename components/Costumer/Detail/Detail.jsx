@@ -42,7 +42,7 @@ export default function Detail() {
 
   if (!client) return <div>Loading...</div>;
 
-  http: return (
+  return (
     <main className="w-full bg-gray-100 overflow-y-auto">
       <div className="flex flex-col w-full bg-gray-100 p-2 lg:p-10 space-y-6">
         <ClientProfile
