@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from "react-icons/md";
 import { HiChartPie } from "react-icons/hi2";
-import Container from "@/components/Container";
-import Header from "@/components/Costumer/Statistiques/Header";
+import Container from "@/Commons/Container";
+import Header from "@/Commons/Header";
 
 export default function TauxOccupation() {
   const [openTab, setOpenTab] = useState(1);

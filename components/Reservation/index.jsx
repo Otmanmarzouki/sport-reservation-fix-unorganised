@@ -7,7 +7,7 @@ import {
 } from "@/services/reservation/index";
 import Calendar from "./Calendar";
 import { FaUserCircle } from "react-icons/fa";
-import Modal from "../Modal/index";
+import Modal from "../../Commons/Modal/index";
 
 const getRandomColor = () => {
   const colors = ["#FFDDC1", "#C1FFD7", "#D1C1FF", "#FFC1C1", "#FFF0C1"];

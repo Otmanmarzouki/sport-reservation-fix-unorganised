@@ -1,10 +1,10 @@
 import React from "react";
 import SportCard from "./SportCard";
 import ClientStatus from "./ClientStatus";
-import Header from "./Header";
+import Header from "../../../Commons/Header";
 import SportPieChart from "./PieChart";
 import useSportsData from "@/hooks/useSportsData";
-import Container from "@/components/Container";
+import Container from "@/Commons/Container";
 
 const NombreDeClientSport = () => {
   const { sportsData, loading, error } = useSportsData();

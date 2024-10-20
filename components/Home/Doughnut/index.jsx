@@ -6,22 +6,24 @@ const DoughnutChart = ({ dataValue }) => {
     labels: ["Completed", "Remaining"],
     datasets: [
       {
-        data: [dataValue, 3000 - dataValue], // Example values, you can adjust accordingly
-        backgroundColor: ["#FF7F0E", "#1F77B4"], // Orange and blue colors
-        hoverBackgroundColor: ["#FF9F40", "#3A9BD9"], // Slightly lighter colors on hover
-        borderWidth: 0, // To make a smooth doughnut without borders
+        data: [dataValue, 3000 - dataValue],
+        backgroundColor: ["#FF7F0E", "#1F77B4"],
+        hoverBackgroundColor: ["#FF9F40", "#3A9BD9"],
+
+        borderWidth: [20, 5],
+        borderColor: ["#FF7F0E", "#1F77B4"],
       },
     ],
   };
 
   const options = {
-    cutout: "70%", // Adjusts the thickness of the chart
+    cutout: "70%",
     plugins: {
       legend: {
-        display: false, // Hide the legend
+        display: false,
       },
       tooltip: {
-        enabled: false, // Disable the tooltip
+        enabled: false,
       },
     },
   };
