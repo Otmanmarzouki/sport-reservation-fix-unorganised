@@ -10,28 +10,33 @@ import LineChart from "./LineChart";
 import Header from "../../Commons/Header";
 
 export default function Acceuil() {
+  const cards = [
+    { color: "bg-blue-700", title: "Réservation Brouillon" },
+    { color: "bg-blue-400", title: "Réservation en Ligne" },
+    { color: "bg-orange-500", title: "Nouveaux Client" },
+  ];
+
   return (
     <>
       <main className="flex flex-col w-full bg-gray-100 overflow-y-auto px-4 space-y-4">
         <Header title="Réservations" className="text-2xl" />
-        <div className="flex flex-col lg:flex-row gap-2">
-          {[{ color: "bg-blue-700" }, { color: "bg-blue-400" }, { color: "bg-orange-500" }].map(
-            (item, index) => (
+        <div className="flex flex-col lg:flex-row gap-4">
+          {cards.map(({ color, title }, index) => (
+            <div
+              key={index}
+              className="flex flex-row w-full lg:w-auto p-4 bg-white shadow rounded-lg"
+            >
               <div
-                key={index}
-                className="flex w-full items-center p-4 bg-white shadow rounded-lg justify-between"
+                className={`flex items-center justify-center h-12 w-12 text-white ${color} rounded-lg`}
               >
-                <div
-                  className={`inline-flex flex-shrink-0 items-center justify-center h-12 w-12 text-white ${item.color} rounded-lg mr-3`}
-                >
-                  <p className="text-lg font-semibold">5</p>
-                </div>
-                <span className="block text-lg font-bold text-blue-700">
-                  <FaRegEdit />
-                </span>
+                <p className="text-lg font-semibold">5</p>
               </div>
-            ),
-          )}
+              <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
+              <div className="flex items-center justify-between mt-2">
+                <FaRegEdit className="text-blue-700 text-lg" />
+              </div>
+            </div>
+          ))}
         </div>
 
         <div className="flex flex-row justify-between ">

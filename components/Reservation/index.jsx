@@ -3,7 +3,7 @@ import {
   fetchTerrains,
   fetchReservations,
   addReservation,
-  cancelReservation,
+  updateReservationStatus,
 } from "@/services/reservation/index";
 import Calendar from "./Calendar";
 import { FaUserCircle } from "react-icons/fa";
@@ -33,7 +33,8 @@ const NouvelleReservationComponent = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [modalType, setModalType] = useState("");
+  const [pendingReservation, setPendingReservation] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -111,16 +112,21 @@ const NouvelleReservationComponent = () => {
       setErrorMessage("Please select a date range.");
       return;
     }
+
     const formData = {
       ...form,
       activité,
       DateDebut: selectedDateRange.startDate,
       DateFin: selectedDateRange.endDate,
+      status: "draft",
     };
 
     setLoading(true);
     try {
-      await addReservation(formData);
+      const savedReservation = await addReservation(formData);
+      setPendingReservation(savedReservation);
+      setModalType("confirm");
+      setShowModal(true);
       setForm({
         Prenom: "",
         Nom: "",
@@ -136,16 +142,29 @@ const NouvelleReservationComponent = () => {
       setLoading(false);
     }
   };
+  const handleConfirm = async () => {
+    if (!pendingReservation) return;
+    setLoading(true);
+    try {
+      const updatedReservation = await updateReservationStatus(pendingReservation.id, "confirmed");
+      setShowModal(false);
+      setPendingReservation(null);
+    } catch (error) {
+      console.error("Error confirming reservation:", error);
+      setErrorMessage("Failed to confirm reservation. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleEventClick = () => {
-    console.log("Event clicked");
-
+    setModalType("delete");
     setShowModal(true);
   };
 
   const handleModalClose = () => {
     setShowModal(false);
-    setSelectedEvent(null); // Clear the selected event
+    setPendingReservation(null);
   };
 
   return (
@@ -237,9 +256,13 @@ const NouvelleReservationComponent = () => {
       {showModal && (
         <Modal
           showModal={showModal}
-          body="Would you like to cancel this event?"
+          body={
+            modalType === "confirm"
+              ? "Voulez-vous confirmer cette réservation ?"
+              : "Voulez-vous supprimer cette réservation ?"
+          }
           onClose={handleModalClose}
-          onSave={handleEventCancel}
+          onSave={modalType === "confirm" ? handleConfirm : handleConfirm}
         />
       )}
     </main>

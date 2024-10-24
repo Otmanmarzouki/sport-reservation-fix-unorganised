@@ -134,15 +134,15 @@ const ShowTerrains = () => {
               </tbody>
             </table>
           </div>
+          {showDeleteModal && (
+            <Modal
+              showModal={showDeleteModal}
+              body={<p>Êtes-vous sûr de vouloir le supprimer  ?</p>}
+              onClose={closeDeleteModal}
+              onSave={confirmDelete}
+            />
+          )}
         </div>
-        {showDeleteModal && (
-          <Modal
-            showModal={showDeleteModal}
-            body={<p>Êtes-vous sûr de vouloir le supprimer  ?</p>}
-            onClose={closeDeleteModal}
-            onSave={confirmDelete}
-          />
-        )}
       </main>
     </>
   );
