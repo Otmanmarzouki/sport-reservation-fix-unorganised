@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import ReusableInput from "@/components/Terrain/Input";
 import AddButton from "@/components/Terrain/AddButton";
 import ReusableDropdown from "@/components/Dropdown";
-import SkeletonLoader from "@/components/Loader/index";
+import SkeletonLoader from "@/Commons/Loader/index";
 
 export default function EditTerrains() {
   const router = useRouter();

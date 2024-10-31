@@ -38,6 +38,7 @@ export const addReservation = async (formData) => {
   }
 };
 
+<<<<<<< HEAD
 export const getClientsCountBySport = async (activité) => {
   try {
       const response = await fetch(`http://127.0.0.1:8000/api/clients-count-by-sport`, {
@@ -60,3 +61,25 @@ export const getClientsCountBySport = async (activité) => {
       throw error; 
   }
 };
+=======
+export const updateReservationStatus = async (id) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/reservations/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      return await response.json();
+    } else {
+      console.error("Failed to update reservation status:", response.statusText);
+      throw new Error("Failed to update reservation status");
+    }
+  } catch (error) {
+    console.error("Error updating reservation status:", error);
+    throw error;
+  }
+};
+>>>>>>> d9e60c44fb3658d1d15d7bca75580e5ee114370e

@@ -5,7 +5,7 @@ import { FiEdit } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 import CustomButton from "@/components/CustomButton/index";
 import { deleteTerrain } from "@/services/terrain/index";
-import Modal from "@/components/Modal/index";
+import Modal from "@/Commons/Modal/index";
 
 const ShowTerrains = () => {
   const [terrains, setTerrains] = useState([]);
@@ -35,7 +35,7 @@ const ShowTerrains = () => {
   };
 
   const handleEditClick = (terrainId) => {
-    router.push(`/terrain/edit/${terrainId}`);
+    router.push(`/terrain/editer/${terrainId}`);
   };
 
   const openDeleteModal = (terrainId) => {
@@ -134,15 +134,15 @@ const ShowTerrains = () => {
               </tbody>
             </table>
           </div>
+          {showDeleteModal && (
+            <Modal
+              showModal={showDeleteModal}
+              body={<p>Êtes-vous sûr de vouloir le supprimer  ?</p>}
+              onClose={closeDeleteModal}
+              onSave={confirmDelete}
+            />
+          )}
         </div>
-        {showDeleteModal && (
-          <Modal
-            showModal={showDeleteModal}
-            body={<p>Êtes-vous sûr de vouloir le supprimer  ?</p>}
-            onClose={closeDeleteModal}
-            onSave={confirmDelete}
-          />
-        )}
       </main>
     </>
   );

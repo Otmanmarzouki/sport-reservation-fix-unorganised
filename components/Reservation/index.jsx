@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { fetchTerrains, fetchReservations, addReservation } from "@/services/reservation/index";
+import {
+  fetchTerrains,
+  fetchReservations,
+  addReservation,
+  updateReservationStatus,
+} from "@/services/reservation/index";
 import Calendar from "./Calendar";
 import { FaUserCircle } from "react-icons/fa";
+import Modal from "../../Commons/Modal/index";
 
 const getRandomColor = () => {
   const colors = ["#FFDDC1", "#C1FFD7", "#D1C1FF", "#FFC1C1", "#FFF0C1"];
@@ -26,6 +32,9 @@ const NouvelleReservationComponent = () => {
   });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState("");
+  const [pendingReservation, setPendingReservation] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -88,10 +97,11 @@ const NouvelleReservationComponent = () => {
       }),
       player: "Joueurs",
       icon: <FaUserCircle className="text-gray-600" />,
+      id: res.id,
     },
   }));
 
-  const handleActivityChange = async (e) => {
+  const handleActivityChange = (e) => {
     const selectedActivity = e.target.value;
     setActivité(selectedActivity);
   };
@@ -102,16 +112,21 @@ const NouvelleReservationComponent = () => {
       setErrorMessage("Please select a date range.");
       return;
     }
+
     const formData = {
       ...form,
       activité,
       DateDebut: selectedDateRange.startDate,
       DateFin: selectedDateRange.endDate,
+      status: "draft",
     };
 
     setLoading(true);
     try {
-      const result = await addReservation(formData);
+      const savedReservation = await addReservation(formData);
+      setPendingReservation(savedReservation);
+      setModalType("confirm");
+      setShowModal(true);
       setForm({
         Prenom: "",
         Nom: "",
@@ -126,6 +141,30 @@ const NouvelleReservationComponent = () => {
     } finally {
       setLoading(false);
     }
+  };
+  const handleConfirm = async () => {
+    if (!pendingReservation) return;
+    setLoading(true);
+    try {
+      const updatedReservation = await updateReservationStatus(pendingReservation.id, "confirmed");
+      setShowModal(false);
+      setPendingReservation(null);
+    } catch (error) {
+      console.error("Error confirming reservation:", error);
+      setErrorMessage("Failed to confirm reservation. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEventClick = () => {
+    setModalType("delete");
+    setShowModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    setPendingReservation(null);
   };
 
   return (
@@ -151,7 +190,11 @@ const NouvelleReservationComponent = () => {
               </div>
             </div>
 
-            <Calendar events={events} handleDateSelect={handleDateSelect} />
+            <Calendar
+              events={events}
+              handleDateSelect={handleDateSelect}
+              handleEventClick={handleEventClick}
+            />
           </div>
           <div className="flex flex-col w-full lg:w-1/3 ">
             <form
@@ -210,6 +253,18 @@ const NouvelleReservationComponent = () => {
           </div>
         </div>
       </div>
+      {showModal && (
+        <Modal
+          showModal={showModal}
+          body={
+            modalType === "confirm"
+              ? "Voulez-vous confirmer cette réservation ?"
+              : "Voulez-vous supprimer cette réservation ?"
+          }
+          onClose={handleModalClose}
+          onSave={modalType === "confirm" ? handleConfirm : handleConfirm}
+        />
+      )}
     </main>
   );
 };

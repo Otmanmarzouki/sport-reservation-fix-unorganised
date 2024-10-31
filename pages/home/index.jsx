@@ -2,14 +2,12 @@ import React from "react";
 
 import Layout from "../Layout/Layout";
 
-import NouvelleReservation from "@/components/Reservation";
-import withAuth from "@/utils/withAuth";
-
+import Home from "../../components/Home/index";
 export default function index() {
   return (
     <>
       <Layout>
-        <NouvelleReservation />
+        <Home />
       </Layout>
     </>
   );
