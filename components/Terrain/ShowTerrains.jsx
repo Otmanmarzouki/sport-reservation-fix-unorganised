@@ -24,11 +24,11 @@ const ShowTerrains = () => {
       })
         .then((res) => res.json())
         .then((resData) => {
-          setTerrains(resData);
+          setTerrains(Array.isArray(resData) ? resData : []);
         });
     }
     fetchData();
-  }, []);
+  }, []);
 
   const handleDeleteSuccess = (terrainId) => {
     setTerrains((prevTerrains) => prevTerrains.filter((terrain) => terrain.id !== terrainId));
