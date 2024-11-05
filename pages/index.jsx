@@ -1,5 +1,5 @@
 import React from "react";
-import AuthForm from "@/components/Login/index";
+import AuthForm from "@/components/Auth/index";
 
 export default function authentification() {
   return (

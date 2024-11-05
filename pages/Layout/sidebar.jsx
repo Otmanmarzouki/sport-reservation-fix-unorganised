@@ -73,7 +73,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
             </li>
           </ul>
 
-          <div className="mt-auto">
+          <div className="mt-32"  >
             <ul className={`flex flex-col space-y-2 ${isMobile ? "items-start px-2" : ""}`}>
               <li>
                 <SidebarItem icon={<FaBullhorn />} text="Marketing" />
