@@ -34,7 +34,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     <>
       {isOpen && isMobile && (
         <div
-          className="fixed inset-0 bg-orange-400 opacity-80 z-40 lg:hidden"
+          className="fixed inset-0 bg-orange-500  z-50 lg:hidden"
           onClick={toggleSidebar}
         />
       )}

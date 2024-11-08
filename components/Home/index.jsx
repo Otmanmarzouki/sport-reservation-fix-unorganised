@@ -16,8 +16,8 @@ export default function Acceuil() {
       try {
         const response = await fetch("http://localhost:8000/api/getReservations");
         const data = await response.json();
-        console.log("Data received from API:", data); // Vérifiez la structure et la valeur de data
-        setDraftCount(data.draftCount); // Définit le nombre de brouillons
+        console.log("Data received from API:", data); 
+        setDraftCount(data.draftCount);
       } catch (error) {
         console.error("Erreur lors de la récupération des réservations :", error);
       }
@@ -28,34 +28,39 @@ export default function Acceuil() {
   
 
   const cards = [
-    { color: "bg-blue-700", title: "Réservation Brouillon", count: draftCount },
-    { color: "bg-blue-400", title: "Réservation en Ligne", count: 5 }, // Exemple de valeur
-    { color: "bg-orange-500", title: "Nouveaux Clients", count: 10 },   // Exemple de valeur
+    { color: "bg-blue-700", title: "Réservation Brouillon", count: draftCount, iconColor: "text-blue-700" },
+    { color: "bg-blue-400", title: "Réservation en Ligne", count: 5, iconColor: "text-blue-400" },
+    { color: "bg-orange-500", title: "Nouveaux Clients", count: 10, iconColor: "text-orange-500" },
   ];
-
+  
   return (
     <main className="flex flex-col w-full bg-gray-100 overflow-y-auto px-4 space-y-4">
-      <Header title="Réservations" className="text-2xl" />
+      <div className="flex flex-col lg:flex-row justify-between pt-7 pr-7 lg:w-auto ">
+        <Header title="Réservations" className="text-2xl" />
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-[15px] hover:bg-blue-600">
+          NOUVELLE RESERVATION 
+        </button>
+      </div>
+       
       <div className="flex flex-col lg:flex-row gap-4">
-        {cards.map(({ color, title, count }, index) => (
+        {cards.map(({ color, title, count, iconColor }, index) => (
           <div
             key={index}
-            className="flex flex-row w-full lg:w-auto p-4 bg-white shadow rounded-lg"
+            className="flex flex-row items-center w-full lg:w-1/3 p-4 bg-white shadow rounded-lg"
           >
             <div
               className={`flex items-center justify-center h-12 w-12 text-white ${color} rounded-lg`}
             >
-              <p className="text-lg font-semibold">{count}</p> {/* Affiche le nombre */}
+              <p className="text-lg font-semibold">{count}</p>
             </div>
             <h3 className="text-lg font-semibold text-gray-800 ml-4">{title}</h3>
             <div className="flex items-center justify-between mt-2">
-              <FaRegEdit className="text-blue-700 text-lg" />
+              <FaRegEdit className={`${iconColor} text-lg ml-28`}  />
             </div>
           </div>
         ))}
       </div>
 
-      {/* Reste du code du composant */}
       <div className="flex flex-row justify-between ">
         <div className="flex items-center">
           <IoFilterSharp className="text-gray-600 mr-2" />
