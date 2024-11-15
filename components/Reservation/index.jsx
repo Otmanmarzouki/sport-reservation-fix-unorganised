@@ -118,7 +118,6 @@ const NouvelleReservationComponent = () => {
       activité,
       DateDebut: selectedDateRange.startDate,
       DateFin: selectedDateRange.endDate,
-      status: "draft",
     };
 
     setLoading(true);
@@ -143,15 +142,21 @@ const NouvelleReservationComponent = () => {
     }
   };
   const handleConfirm = async () => {
-    if (!pendingReservation) return;
+    if (!pendingReservation) {
+      setErrorMessage("No reservation selected for confirmation.");
+      return;
+    }
     setLoading(true);
     try {
-      const updatedReservation = await updateReservationStatus(pendingReservation.id, "confirmed");
+      const updatedReservation = await updateReservationStatus(pendingReservation.reservation.id);
       setShowModal(false);
       setPendingReservation(null);
+      setErrorMessage("");
     } catch (error) {
       console.error("Error confirming reservation:", error);
-      setErrorMessage("Failed to confirm reservation. Please try again.");
+      setErrorMessage(
+        error.response?.data?.error || "Failed to confirm reservation. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
