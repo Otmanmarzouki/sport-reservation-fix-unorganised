@@ -1,39 +1,35 @@
 import React from "react";
 import { validateTerrainData } from "./validate";
+import { addTerrain, updateTerrain } from "@/services/terrain";
 
-export default function AddButton({
+export default function TerrainButton({
   className,
   label,
   terrainData,
   isLoading,
   setIsLoading,
   setErrors,
+  actionType,
+  terrainId,
 }) {
   const handleClick = async () => {
     const errors = validateTerrainData(terrainData);
-
     if (Object.keys(errors).length > 0) {
       setErrors(errors);
       return;
     }
 
     setIsLoading(true);
-
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/addTerrain", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(terrainData),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to add terrain");
+      let result;
+      if (actionType === "update") {
+        console.log("Updated terrain data:", terrainData);
+        console.log(terrainId);
+        result = await updateTerrain(terrainId, terrainData);
+      } else if (actionType === "add") {
+        result = await addTerrain(terrainData);
       }
-
-      const data = await response.json();
+      console.log(result);
     } catch (error) {
       console.error("Error:", error);
     } finally {

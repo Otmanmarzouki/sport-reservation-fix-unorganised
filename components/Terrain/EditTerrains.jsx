@@ -1,49 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import ReusableInput from "@/components/Terrain/Input";
-import AddButton from "@/components/Terrain/AddButton";
+import TerrainButton from "./Button";
 import ReusableDropdown from "@/components/Dropdown";
 import SkeletonLoader from "@/Commons/Loader/index";
+import { fetchTerrainById, updateTerrain } from "@/services/terrain";
 
 export default function EditTerrains() {
   const router = useRouter();
   const { id } = router.query;
   const [terrain, setTerrain] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (id) {
-      const fetchTerrain = async () => {
+      const loadTerrain = async () => {
         try {
-          const response = await fetch(`http://127.0.0.1:8000/api/getTerrain/${id}`);
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message);
-          }
-          const data = await response.json();
-          setTerrain(data);
+          const fetchedTerrain = await fetchTerrainById(id);
+          setTerrain(fetchedTerrain);
         } catch (error) {
-          alert(error.message);
+          alert(`Error fetching terrain: ${error.message}`);
         }
       };
 
-      fetchTerrain();
+      loadTerrain();
     }
   }, [id]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!terrain) return;
-
-    await fetch(`http://127.0.0.1:8000/api/updateTerrain/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedTerrain),
-    });
-
-    router.push("/terrain");
-  };
 
   if (!terrain) {
     return (
@@ -58,7 +40,7 @@ export default function EditTerrains() {
   return (
     <main className="w-full bg-gray-100 overflow-y-auto p-2 lg:p-10">
       <div className="w-full lg:px-10 bg-gray-50 shadow-md rounded">
-        <form onSubmit={handleSubmit}>
+        <form>
           <div className="flex flex-col lg:flex-row pt-10 pb-2">
             <div className="flex w-full lg:flex-row flex-col lg:justify-between">
               <div className="flex w-full flex-col gap-2">
@@ -103,7 +85,7 @@ export default function EditTerrains() {
                 <ReusableDropdown
                   initialValue={terrain.activité}
                   value={terrain.activité}
-                  onChange={(value) => setTerrain({ ...terrain, activity: value })}
+                  onChange={(value) => setTerrain({ ...terrain, activité: value })}
                 />
               </div>
 
@@ -146,15 +128,18 @@ export default function EditTerrains() {
           <div className="flex flex-col lg:flex-row pt-16 pb-2">
             <div className="flex w-full lg:flex-row flex-col lg:justify-between">
               <div className="flex w-full mb-4 lg:mx-2 flex-row lg:space-x-2 lg:justify-around justify-evenly">
-                <AddButton
+                <TerrainButton
                   className="h-8 w-20 lg:w-28 bg-transparent border border-blue-500 rounded-lg text-blue-400 text-sm"
                   label="Cancel"
-                  onClick={() => router.push("/terrain")}
                 />
-                <AddButton
-                  type="submit"
+                <TerrainButton
                   className="h-8 w-20 lg:w-28 bg-blue-500 rounded-lg text-white text-sm"
                   label="Valider"
+                  isLoading={isLoading}
+                  setIsLoading={setIsLoading}
+                  actionType="update"
+                  terrainId={id}
+                  terrainData={terrain}
                 />
               </div>
             </div>
