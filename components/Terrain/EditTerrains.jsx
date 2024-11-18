@@ -5,7 +5,17 @@ import TerrainButton from "./Button";
 import ReusableDropdown from "@/components/Dropdown";
 import SkeletonLoader from "@/Commons/Loader/index";
 import { fetchTerrainById } from "@/services/terrain";
+const activity = [
+  { value: 1, label: "Paddle" },
+  { value: 2, label: "Tennis" },
+  { value: 3, label: "Mini Foot" },
+];
 
+const terrainOptions = [
+  { value: 1, label: "Goudron" },
+  { value: 2, label: "Herbe" },
+  { value: 3, label: "Gravier" },
+];
 export default function EditTerrains() {
   const router = useRouter();
   const { id } = router.query;
@@ -18,6 +28,8 @@ export default function EditTerrains() {
         try {
           const fetchedTerrain = await fetchTerrainById(id);
           setTerrain(fetchedTerrain);
+
+          console.log(terrain);
         } catch (error) {
           alert(`Error fetching terrain: ${error.message}`);
         }
@@ -80,13 +92,18 @@ export default function EditTerrains() {
           <div className="flex w-full lg:flex-row flex-col lg:justify-between">
             <div className="flex flex-col w-full">
               <div className="lg:mx-0 mx-5 text-gray-400 text-sm">Activité:</div>
-              <ReusableDropdown value={terrain.activité} onChange={handleChange("activité")} />
+              <ReusableDropdown
+                value={terrain.activité}
+                options={activity}
+                onChange={handleChange("activité")}
+              />
             </div>
 
             <div className="flex flex-col w-full ">
               <div className="lg:mx-0 mx-5 text-gray-400 text-sm">Type de terrain:</div>
               <ReusableDropdown
                 value={terrain.type_Terrain}
+                options={terrainOptions}
                 onChange={handleChange("type_Terrain")}
               />
             </div>
