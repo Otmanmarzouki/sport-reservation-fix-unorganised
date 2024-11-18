@@ -23,13 +23,10 @@ export default function TerrainButton({
     try {
       let result;
       if (actionType === "update") {
-        console.log("Updated terrain data:", terrainData);
-        console.log(terrainId);
         result = await updateTerrain(terrainId, terrainData);
       } else if (actionType === "add") {
         result = await addTerrain(terrainData);
       }
-      console.log(result);
     } catch (error) {
       console.error("Error:", error);
     } finally {
