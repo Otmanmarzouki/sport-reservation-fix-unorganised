@@ -1,6 +1,6 @@
 export const fetchTerrains = async () => {
   try {
-    const response = await fetch("http://127.0.0.1:8000/api/getTerrain");
+    const response = await fetch("http://127.0.0.1:8000/api/terrains");
     return await response.json();
   } catch (error) {
     console.error("Error fetching terrains:", error);
@@ -37,7 +37,6 @@ export const addReservation = async (formData) => {
     console.error("Error submitting form:", error);
   }
 };
-
 
 export const updateReservationStatus = async (id) => {
   try {
