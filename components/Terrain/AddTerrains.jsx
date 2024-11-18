@@ -9,16 +9,28 @@ const activity = [
   { value: 3, label: "Mini Foot" },
 ];
 
-const terrain = [
+const terrainOptions = [
   { value: 1, label: "Goudron" },
   { value: 2, label: "Herbe" },
   { value: 3, label: "Gravier" },
 ];
 
 export default function AddTerrains() {
-  const [terrain, setTerrain] = useState({});
+  const [terrain, setTerrain] = useState({
+    Nom_Terrain: "",
+    dimension1: "",
+    dimension2: "",
+    activité: "",
+    type_Terrain: "",
+    Capacité: "",
+    prix: "",
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+
+  const handleChange = (key) => (value) => {
+    setTerrain({ ...terrain, [key]: value });
+  };
 
   return (
     <main className="w-full bg-gray-100 overflow-y-auto p-2 lg:p-10">
@@ -28,9 +40,9 @@ export default function AddTerrains() {
             <div className="flex w-full flex-col gap-2">
               <div className="lg:mx-0 mx-5 text-gray-400 text-sm">Nom du terrain:</div>
               <ReusableInput
-                initialValue={terrain.Nom_Terrain || ""}
-                onChange={(e) => setTerrain({ ...terrain, Nom_Terrain: e.target.value })}
-                placeholder="Terrain"
+                className="w-4/5 h-8  appearance-none border rounded py-1 px-2 text-gray-400 leading-tight focus:outline-none focus:shadow-outline"
+                initialValue={terrain.Nom_Terrain}
+                onChange={handleChange("Nom_Terrain")}
               />
               {errors.Nom_Terrain && (
                 <div className="text-red-500 text-xs">{errors.Nom_Terrain}</div>
@@ -39,19 +51,19 @@ export default function AddTerrains() {
 
             <div className="flex w-full flex-col gap-2">
               <div className="lg:mx-0 mx-5 text-gray-400 text-sm">Dimensions:</div>
-              <div className="flex flex-row">
+              <div className="flex flex-row ">
                 <ReusableInput
                   className="w-28 h-8 appearance-none border rounded py-1 px-2 text-gray-400 leading-tight focus:outline-none focus:shadow-outline"
                   initialValue={terrain.dimension1}
                   type="number"
-                  onChange={(e) => setTerrain({ ...terrain, dimension1: e.target.value })}
+                  onChange={handleChange("dimension1")}
                   showButton={true}
                 />
                 <ReusableInput
                   className="w-28 h-8 appearance-none border rounded py-1 px-2 text-gray-400 leading-tight focus:outline-none focus:shadow-outline"
                   initialValue={terrain.dimension2}
                   type="number"
-                  onChange={(e) => setTerrain({ ...terrain, dimension2: e.target.value })}
+                  onChange={handleChange("dimension2")}
                   showButton={true}
                 />
               </div>
@@ -65,9 +77,9 @@ export default function AddTerrains() {
             <div className="flex flex-col w-full">
               <div className="lg:mx-0 mx-5 text-gray-400 text-sm">Activité:</div>
               <ReusableDropdown
-                initialValue={terrain.activité}
+                options={activity}
                 value={terrain.activité}
-                onChange={(value) => setTerrain({ ...terrain, activité: value })}
+                onChange={handleChange("activité")}
               />
               {errors.activité && <div className="text-red-500 text-xs">{errors.activité}</div>}
             </div>
@@ -75,8 +87,9 @@ export default function AddTerrains() {
             <div className="flex flex-col w-full ">
               <div className="lg:mx-0 mx-5 text-gray-400 text-sm">Type de terrain:</div>
               <ReusableDropdown
-                initialValue={terrain.type_Terrain}
-                onChange={(value) => setTerrain({ ...terrain, type_Terrain: value })}
+                options={terrainOptions}
+                value={terrain.type_Terrain}
+                onChange={handleChange("type_Terrain")}
               />
               {errors.type_Terrain && (
                 <div className="text-red-500 text-xs">{errors.type_Terrain}</div>
@@ -93,7 +106,7 @@ export default function AddTerrains() {
                 className="w-28 h-8 appearance-none border rounded py-1 px-2 text-gray-400 leading-tight focus:outline-none focus:shadow-outline"
                 initialValue={terrain.Capacité}
                 type="number"
-                onChange={(e) => setTerrain({ ...terrain, Capacité: e.target.value })}
+                onChange={handleChange("Capacité")}
                 showButton={true}
               />
               {errors.Capacité && <div className="text-red-500 text-xs">{errors.Capacité}</div>}
@@ -105,7 +118,7 @@ export default function AddTerrains() {
                 className="w-28 h-8 appearance-none border rounded py-1 px-2 text-gray-400 leading-tight focus:outline-none focus:shadow-outline"
                 initialValue={terrain.prix}
                 type="number"
-                onChange={(e) => setTerrain({ ...terrain, prix: e.target.value })}
+                onChange={handleChange("prix")}
                 showButton={true}
               />
               {errors.prix && <div className="text-red-500 text-xs">{errors.prix}</div>}

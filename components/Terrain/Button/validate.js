@@ -1,5 +1,4 @@
 export const validateTerrainData = (data) => {
-  console.log(data);
   const errors = {};
 
   if (!data.Nom_Terrain || !data.Nom_Terrain.trim()) {
@@ -15,22 +14,23 @@ export const validateTerrainData = (data) => {
   }
 
   if (!data.Capacité || isNaN(data.Capacité) || data.Capacité <= 0) {
-    errors.Capacité = "La capacité doit être un nombre valide.";
+    errors.Capacité = "La capacité doit être un nombre valide supérieur à 0.";
   }
 
   if (!data.prix || isNaN(data.prix) || data.prix <= 0) {
-    errors.prix = "Le prix doit être un nombre valide.";
+    errors.prix = "Le prix doit être un nombre valide supérieur à 0.";
   }
 
-  if (
-    !data.dimension1 ||
-    isNaN(data.dimension1) ||
-    data.dimension1 <= 0 ||
-    !data.dimension2 ||
-    isNaN(data.dimension2) ||
-    data.dimension2 <= 0
-  ) {
-    errors.dimensions = "Les dimensions doivent être des nombres valides.";
+  const dimensionsValid =
+    data.dimension1 &&
+    !isNaN(data.dimension1) &&
+    data.dimension1 > 0 &&
+    data.dimension2 &&
+    !isNaN(data.dimension2) &&
+    data.dimension2 > 0;
+
+  if (!dimensionsValid) {
+    errors.dimensions = "Les dimensions doivent être des nombres valides supérieurs à 0.";
   }
 
   return errors;
