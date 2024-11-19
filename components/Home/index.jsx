@@ -14,34 +14,37 @@ export default function Acceuil() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch("http://localhost:8000/api/getReservations");
+        const response = await fetch("http://localhost:8000/api/drafts");
         const data = await response.json();
-        console.log("Data received from API:", data); 
         setDraftCount(data.draftCount);
       } catch (error) {
         console.error("Erreur lors de la récupération des réservations :", error);
       }
     }
-  
+
     fetchData();
   }, []);
-  
 
   const cards = [
-    { color: "bg-blue-700", title: "Réservation Brouillon", count: draftCount, iconColor: "text-blue-700" },
+    {
+      color: "bg-blue-700",
+      title: "Réservation Brouillon",
+      count: draftCount,
+      iconColor: "text-blue-700",
+    },
     { color: "bg-blue-400", title: "Réservation en Ligne", count: 5, iconColor: "text-blue-400" },
     { color: "bg-orange-500", title: "Nouveaux Clients", count: 10, iconColor: "text-orange-500" },
   ];
-  
+
   return (
     <main className="flex flex-col w-full bg-gray-100 overflow-y-auto px-4 space-y-4">
       <div className="flex flex-col lg:flex-row justify-between pt-7 pr-7 lg:w-auto ">
         <Header title="Réservations" className="text-2xl" />
         <button className="bg-blue-500 text-white px-4 py-2 rounded-[15px] hover:bg-blue-600">
-          NOUVELLE RESERVATION 
+          NOUVELLE RESERVATION
         </button>
       </div>
-       
+
       <div className="flex flex-col lg:flex-row gap-4">
         {cards.map(({ color, title, count, iconColor }, index) => (
           <div
@@ -55,7 +58,7 @@ export default function Acceuil() {
             </div>
             <h3 className="text-lg font-semibold text-gray-800 ml-4">{title}</h3>
             <div className="flex items-center justify-between mt-2">
-              <FaRegEdit className={`${iconColor} text-lg ml-28`}  />
+              <FaRegEdit className={`${iconColor} text-lg ml-28`} />
             </div>
           </div>
         ))}

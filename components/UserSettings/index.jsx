@@ -23,8 +23,8 @@ const UserSettings = () => {
 
   return (
     <>
-      <main className="flex flex-col w-full bg-gray-100 overflow-y-auto px-4 space-y-8">
-        <div className="flex flex-row justify-between lg:px-6 pt-8">
+      <main className="flex flex-col w-full bg-gray-100 overflow-y-auto  space-y-4">
+        <div className="flex flex-row justify-between lg:px-4 pt-8">
           <div className="mx-2">
             <h3 className="lg:text-2xl text-lg font-semibold">User Settings</h3>
           </div>

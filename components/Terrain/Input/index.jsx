@@ -1,47 +1,48 @@
 import React, { useState } from "react";
 
-function ReusableInput(props) {
-  const { className } = props;
-  const [value, setValue] = useState(props.initialValue || ""); // Set default value
+function ReusableInput({
+  type = "text",
+  initialValue = "",
+  className = "",
+  placeholder = "",
+  showButton = false,
+  buttonLabel = "+",
+  onChange,
+}) {
+  const [value, setValue] = useState(initialValue);
 
   const handleChange = (event) => {
-    setValue(event.target.value);
-    if (props.onChange) {
-      // Call parent's onChange handler if provided
-      props.onChange(event.target.value);
-    }
+    const newValue = event.target.value;
+    setValue(newValue);
+    if (onChange) onChange(newValue);
   };
 
   const handleIncrement = () => {
-    if (props.type === "number") {
-      setValue(parseInt(value) + 1);
-    } else {
-      setValue(value + props.incrementBy || 1); // Default increment by 1
+    if (type === "number") {
+      const newValue = parseInt(value || 0) + 1;
+      setValue(newValue);
+      if (onChange) onChange(newValue);
     }
   };
 
   return (
-    <div className="flex w-full lg:flex-row flex-col gap-2">
-      <div className="flex w-full flex-row lg:space-x-2 lg:justify-start justify-evenly">
-        <div className="flex justify-center">
-          <input
-            className={className}
-            type={props.type || "text"} // Set default type to text
-            value={value}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="flex justify-center">
-          {props.showButton && ( // Conditionally render button
-            <button
-              className="h-8 w-8 bg-blue-500 rounded-sm text-white text-lg"
-              onClick={handleIncrement}
-            >
-              {props.buttonLabel || "+"} {/* Set default button label */}
-            </button>
-          )}
-        </div>
-      </div>
+    <div className="flex w-full lg:justify-start justify-center gap-2">
+      <input
+        type={type}
+        value={value}
+        placeholder={placeholder}
+        className={`border rounded py-1 px-2 ${className}`}
+        onChange={handleChange}
+      />
+      {showButton && (
+        <button
+          type="button"
+          className="h-8 w-8 bg-blue-500 text-white rounded"
+          onClick={handleIncrement}
+        >
+          {buttonLabel}
+        </button>
+      )}
     </div>
   );
 }

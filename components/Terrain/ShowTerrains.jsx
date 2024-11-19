@@ -15,7 +15,7 @@ const ShowTerrains = () => {
 
   useEffect(() => {
     async function fetchData() {
-      await fetch("http://127.0.0.1:8000/api/getTerrain", {
+      await fetch("http://127.0.0.1:8000/api/terrains", {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -28,7 +28,7 @@ const ShowTerrains = () => {
         });
     }
     fetchData();
-  }, []);
+  }, []);
 
   const handleDeleteSuccess = (terrainId) => {
     setTerrains((prevTerrains) => prevTerrains.filter((terrain) => terrain.id !== terrainId));
