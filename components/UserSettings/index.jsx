@@ -1,5 +1,5 @@
 // pages/user-settings.js
-import React, { useState } from "react";
+/*import React, { useState } from "react";
 import Image from "next/image";
 
 const UserSettings = () => {
@@ -121,6 +121,208 @@ const UserSettings = () => {
         </div>
       </main>
     </>
+  );
+};
+
+export default UserSettings;*/
+import { useState } from "react";
+import Image from "next/image";
+import { FaEdit, FaTrash } from "react-icons/fa";
+
+const UserSettings = () => {
+  const [nomUsage, setNomUsage] = useState("");
+  const [nomComplet, setNomComplet] = useState("");
+  const [email, setEmail] = useState("");
+  const [numeroTelephone, setNumeroTelephone] = useState("");
+  const [adresse, setAdresse] = useState("");
+  const [genre, setGenre] = useState("");
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleImageRemove = () => {
+    setImage(null);
+    setImagePreview(null);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log({
+      nomUsage,
+      nomComplet,
+      email,
+      numeroTelephone,
+      adresse,
+      genre,
+      image,
+    });
+  };
+
+  return (
+    <main className="flex flex-col items-center w-full bg-gray-100 py-8 px-4 space-y-8">
+      {/* User Header */}
+      <div className="w-full max-w-3xl bg-white shadow-lg rounded-lg p-6">
+        <div className="relative flex items-center space-x-4">
+          {/* Profile Image */}
+          <label
+            htmlFor="avatarUpload"
+            className="cursor-pointer group relative flex flex-col items-center"
+          >
+            <Image
+              src={imagePreview || "/default-avatar.png"}
+              width={120}
+              height={120}
+              alt="User Avatar"
+              className="object-cover w-32 h-32 rounded-full ring-2 ring-indigo-300"
+            />
+            {/* Edit and Delete Icons */}
+            <div className="flex space-x-4 mt-2">
+              <button
+                onClick={() => document.getElementById("avatarUpload").click()}
+                className="text-indigo-500 hover:text-indigo-700 transition-colors duration-200 p-1 rounded-full hover:bg-indigo-100"
+                title="Modifier"
+              >
+                <FaEdit size={16} />
+              </button>
+              <button
+                onClick={handleImageRemove}
+                className="text-red-500 hover:text-red-700 transition-colors duration-200 p-1 rounded-full hover:bg-red-100"
+                title="Supprimer"
+              >
+                <FaTrash size={16} />
+              </button>
+            </div>
+            <input
+              type="file"
+              id="avatarUpload"
+              accept="image/*"
+              className="hidden"
+              onChange={handleImageChange}
+            />
+          </label>
+
+          {/* User Info */}
+          <div>
+            <h3 className="text-xl font-bold">{nomUsage || "User"}</h3>
+            <p className="text-gray-500">{adresse || "City, Country"}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* User Form */}
+      <div className="w-full max-w-3xl bg-white shadow-lg rounded-lg p-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Nom d'usage et nom complet */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Nom d'usage
+              </label>
+              <input
+                type="text"
+                value={nomUsage}
+                onChange={(e) => setNomUsage(e.target.value)}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500"
+                placeholder="Entrez votre nom d'usage"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Nom complet
+              </label>
+              <input
+                type="text"
+                value={nomComplet}
+                onChange={(e) => setNomComplet(e.target.value)}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500"
+                placeholder="Entrez votre nom complet"
+                required
+              />
+            </div>
+          </div>
+
+          {/* Email et numéro de téléphone */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Adresse e-mail
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500"
+                placeholder="Entrez votre email"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Numéro de téléphone
+              </label>
+              <input
+                type="text"
+                value={numeroTelephone}
+                onChange={(e) => setNumeroTelephone(e.target.value)}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500"
+                placeholder="Entrez votre numéro de téléphone"
+              />
+            </div>
+          </div>
+
+          {/* Adresse et Genre */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Adresse
+              </label>
+              <input
+                type="text"
+                value={adresse}
+                onChange={(e) => setAdresse(e.target.value)}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500"
+                placeholder="Ville, Pays"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Genre
+              </label>
+              <select
+                value={genre}
+                onChange={(e) => setGenre(e.target.value)}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500"
+                required
+              >
+                <option  value="">Sélectionnez votre genre</option>
+                <option value="masculin">Masculin</option>
+                <option value="féminin">Féminin</option>
+                <option value="autre">Autre</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Save Button */}
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Enregistrer
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
   );
 };
 
