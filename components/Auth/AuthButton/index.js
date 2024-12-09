@@ -13,6 +13,9 @@ export default function AuthButton({ isSignUp, name, email, password }) {
     setErrors("");
     try {
       const data = await auth(isSignUp, name, email, password);
+      console.log(data)
+      localStorage.setItem("userName", data.user.name);
+      localStorage.setItem("userEmail", data.user.email);
       localStorage.setItem("token", data.token);
       router.push("/home");
     } catch (err) {
