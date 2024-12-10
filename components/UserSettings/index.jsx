@@ -1,27 +1,25 @@
+/* eslint-disable react/no-unescaped-entities */
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
 const UserSettings = () => {
-
-  const [nomUsage, setNomUsage] = useState(""); 
-  const [dateNaissance, setDateNaissance] = useState(""); 
+  const [nomUsage, setNomUsage] = useState("");
+  const [dateNaissance, setDateNaissance] = useState("");
   const [email, setEmail] = useState("");
-  const [numeroTelephone, setNumeroTelephone] = useState(""); 
-  const [adresse, setAdresse] = useState(""); 
-  const [genre, setGenre] = useState(""); 
-  const [imagePreview, setImagePreview] = useState(null); 
+  const [numeroTelephone, setNumeroTelephone] = useState("");
+  const [adresse, setAdresse] = useState("");
+  const [genre, setGenre] = useState("");
+  const [imagePreview, setImagePreview] = useState(null);
 
- 
   useEffect(() => {
     const userName = localStorage.getItem("userName");
     const userEmail = localStorage.getItem("userEmail");
 
-    if (userName) setNomUsage(userName); 
-    if (userEmail) setEmail(userEmail); 
+    if (userName) setNomUsage(userName);
+    if (userEmail) setEmail(userEmail);
   }, []);
-
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -30,11 +28,9 @@ const UserSettings = () => {
     }
   };
 
-
   const handleImageRemove = () => {
     setImagePreview(null);
   };
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -50,11 +46,12 @@ const UserSettings = () => {
 
   return (
     <main className="flex flex-col items-center w-full bg-gray-100 py-8 px-4 space-y-8">
-
       <div className="w-full max-w-3xl bg-white shadow-lg rounded-lg p-6">
         <div className="relative flex items-center space-x-4">
-        
-          <label htmlFor="avatarUpload" className="cursor-pointer group relative flex flex-col items-center">
+          <label
+            htmlFor="avatarUpload"
+            className="cursor-pointer group relative flex flex-col items-center"
+          >
             <Image
               src={imagePreview || "/default-avatar.png"}
               width={120}
@@ -93,15 +90,11 @@ const UserSettings = () => {
         </div>
       </div>
 
-   
       <div className="w-full max-w-3xl bg-white shadow-lg rounded-lg p-6">
         <form onSubmit={handleSubmit} className="space-y-6">
-       
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Nom d'usage
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Nom d'usage</label>
               <input
                 type="text"
                 value={nomUsage}
@@ -112,9 +105,7 @@ const UserSettings = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Date de naissance
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Date de naissance</label>
               <input
                 type="date"
                 value={dateNaissance}
@@ -125,12 +116,9 @@ const UserSettings = () => {
             </div>
           </div>
 
-        
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Adresse e-mail
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Adresse e-mail</label>
               <input
                 type="email"
                 value={email}
@@ -141,9 +129,7 @@ const UserSettings = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Numéro de téléphone
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Numéro de téléphone</label>
               <input
                 type="text"
                 value={numeroTelephone}
@@ -154,12 +140,9 @@ const UserSettings = () => {
             </div>
           </div>
 
-   
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Adresse
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Adresse</label>
               <input
                 type="text"
                 value={adresse}
@@ -169,11 +152,8 @@ const UserSettings = () => {
               />
             </div>
 
-   
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Genre
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Genre</label>
               <select
                 value={genre}
                 onChange={(e) => setGenre(e.target.value)}
@@ -187,7 +167,6 @@ const UserSettings = () => {
             </div>
           </div>
 
-    
           <div className="flex justify-end">
             <button
               type="submit"
@@ -203,4 +182,3 @@ const UserSettings = () => {
 };
 
 export default UserSettings;
-

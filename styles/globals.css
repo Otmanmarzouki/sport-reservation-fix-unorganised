@@ -22,3 +22,10 @@
   font-size: small;
   color: gray;
 }
+.rdp-chevron {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

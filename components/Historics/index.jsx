@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Calendar from "./Calendar";
 import MiniCalendar from "./MiniCalendar";
 import TerrainSelector from "./Selector";
+import Search from "./Search";
+import Legend from "./Legend";
 
 const HistoricComponent = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -68,10 +70,14 @@ const HistoricComponent = () => {
             />
             <Calendar events={filteredEvents} handleEventClick={handleEventClick} />
           </div>
-          <div className="lg:w-1/3 w-full ">
+          <div className="lg:w-1/3 w-full flex flex-col gap-8">
+            <div>
+              <Search />
+            </div>
             <div className="bg-white p-4  rounded-lg ">
               <MiniCalendar selectedDate={selectedDate} onDateChange={handleDateChange} />
             </div>
+            <Legend />
           </div>
         </div>
       </div>
