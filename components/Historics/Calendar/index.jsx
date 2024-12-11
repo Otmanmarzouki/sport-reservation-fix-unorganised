@@ -2,25 +2,22 @@ import React, { useMemo } from "react";
 import FullCalendar from "@fullcalendar/react";
 import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 
-export default function Calendar({ events, handleDateSelect, handleEventClick }) {
-  const slotLabelFormat = {
-    hour: "numeric",
-    minute: "2-digit",
-  };
+export default function Calendar({ events, handleEventClick }) {
   const resources = useMemo(() => {
-    const data = new Set(events.map((event) => event.resource));
-    return Array.from(data).map((id) => ({
-      id,
-      title: id,
+    const terrainSet = new Set(events.map((event) => event.terrain_name));
+    return Array.from(terrainSet).map((terrainName) => ({
+      id: terrainName,
+      title: terrainName,
     }));
   }, [events]);
+
   return (
     <div>
       <style>{`.fc-license-message { display: none !important; }`}</style>
       <FullCalendar
         plugins={[resourceTimeGridPlugin]}
         initialView="resourceTimeGridDay"
-        slotLabelFormat={slotLabelFormat}
+        slotLabelFormat={{ hour: "numeric", minute: "2-digit" }}
         resources={resources}
         events={events}
         allDaySlot={false}
@@ -34,7 +31,6 @@ export default function Calendar({ events, handleDateSelect, handleEventClick })
         resourceAreaWidth="150px"
         resourceAreaHeaderContent="Terrains"
         selectable={true}
-        select={handleDateSelect}
         eventClick={handleEventClick}
         eventContent={(arg) => (
           <div className="flex flex-col items-center">
