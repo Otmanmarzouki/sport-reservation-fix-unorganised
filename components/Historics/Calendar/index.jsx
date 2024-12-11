@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import FullCalendar from "@fullcalendar/react";
 import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 
@@ -7,12 +7,13 @@ export default function Calendar({ events, handleDateSelect, handleEventClick })
     hour: "numeric",
     minute: "2-digit",
   };
-  const resources = [
-    { id: "terrain1", title: "Terrain 1" },
-    { id: "terrain2", title: "Terrain 2" },
-    { id: "terrain3", title: "Terrain 3" },
-  ];
-
+  const resources = useMemo(() => {
+    const data = new Set(events.map((event) => event.resource));
+    return Array.from(data).map((id) => ({
+      id,
+      title: id,
+    }));
+  }, [events]);
   return (
     <div>
       <style>{`.fc-license-message { display: none !important; }`}</style>

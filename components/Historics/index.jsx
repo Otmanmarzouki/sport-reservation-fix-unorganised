@@ -9,9 +9,9 @@ const HistoricComponent = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTerrain, setSelectedTerrain] = useState("");
   const [terrains] = useState([
-    { id: "terrain1", title: "Terrain 1" },
-    { id: "terrain2", title: "Terrain 2" },
-    { id: "terrain3", title: "Terrain 3" },
+    { id: "1", title: "Terrain 1" },
+    { id: "2", title: "Terrain 2" },
+    { id: "3", title: "Terrain 3" },
   ]);
 
   const [events] = useState([
@@ -20,29 +20,29 @@ const HistoricComponent = () => {
       title: "Créneau Disponible",
       start: "2024-11-19T07:00:00",
       end: "2024-11-19T08:00:00",
-      resourceId: "terrain1",
-      color: "#FFC0CB",
+      resource: "terrain 1",
+      terrainId: "1",
     },
     {
       id: "2",
       title: "Créneau Annulé",
       start: "2024-11-19T11:00:00",
       end: "2024-11-19T12:00:00",
-      resourceId: "terrain2",
-      color: "#87CEEB",
+      resource: "terrain 2",
+      terrainId: "2",
     },
     {
       id: "3",
       title: "Joueur 1 - Non Payée",
       start: "2024-11-19T15:00:00",
       end: "2024-11-19T16:00:00",
-      resourceId: "terrain3",
-      color: "#90EE90",
+      resource: "terrain 3",
+      terrainId: "3",
     },
   ]);
 
   const filteredEvents = selectedTerrain
-    ? events.filter((event) => event.resourceId === selectedTerrain)
+    ? events.filter((event) => event.terrainId === selectedTerrain)
     : events;
 
   const handleDateChange = (date) => {
@@ -71,10 +71,8 @@ const HistoricComponent = () => {
             <Calendar events={filteredEvents} handleEventClick={handleEventClick} />
           </div>
           <div className="lg:w-1/3 w-full flex flex-col gap-8">
-            <div>
-              <Search />
-            </div>
-            <div className="bg-white p-4  rounded-lg ">
+            <Search />
+            <div className="bg-white p-4 rounded-lg ">
               <MiniCalendar selectedDate={selectedDate} onDateChange={handleDateChange} />
             </div>
             <Legend />
