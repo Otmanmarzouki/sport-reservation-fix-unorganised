@@ -43,7 +43,7 @@ export default function HistoricComponent() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          Date: date.toISOString().split("T")[0] || null,
+          Date: date.toISOString().split("T")[0],
           terrainId: terrainId || null,
         }),
       });
