@@ -1,5 +1,15 @@
 const API_BASE_URL = "http://127.0.0.1:8000/api/terrain";
 
+export const fetchTerrains = async () => {
+  try {
+    const response = await fetch("http://127.0.0.1:8000/api/terrains");
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching terrains:", error);
+    return [];
+  }
+};
+
 export const addTerrain = async (terrainData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/ajouter`, {

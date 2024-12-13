@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import useReservations from "@/hooks/useReservations";
+import useTerrains from "@/hooks/useTerrains";
+
 import {
-  fetchTerrains,
-  fetchReservations,
   addReservation,
   updateReservationStatus,
+  cancelReservation,
 } from "@/services/reservation/index";
 import Calendar from "./Calendar";
 import { FaUserCircle } from "react-icons/fa";
@@ -14,9 +16,14 @@ const getRandomColor = () => {
   return colors[Math.floor(Math.random() * colors.length)];
 };
 
-const NouvelleReservationComponent = () => {
-  const [terrains, setTerrains] = useState([]);
-  const [reservations, setReservations] = useState([]);
+const ReservationComponent = () => {
+  const {
+    reservations,
+    loading: reservationsLoading,
+    errorMessage: reservationsErrorMessage,
+  } = useReservations();
+  const { terrains, loading: terrainsLoading, errorMessage: terrainsErrorMessage } = useTerrains();
+
   const [filteredReservations, setFilteredReservations] = useState([]);
   const [activité, setActivité] = useState();
   const [selectedDateRange, setSelectedDateRange] = useState({
@@ -30,38 +37,21 @@ const NouvelleReservationComponent = () => {
     Tel: "",
     Sexe: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState("");
   const [pendingReservation, setPendingReservation] = useState(null);
+  const [selectedReservationId, setSelectedReservationId] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const fetchedTerrains = await fetchTerrains();
-        setTerrains(fetchedTerrains);
-        const fetchedReservations = await fetchReservations();
-        setReservations(Array.isArray(fetchedReservations) ? fetchedReservations : []);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setErrorMessage("Failed to fetch data. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
+    console.log(terrains);
     if (activité) {
       const filtered = reservations.filter((res) => res.terrain.activité === activité);
       setFilteredReservations(filtered);
     } else {
       setFilteredReservations(reservations);
     }
-  }, [activité, reservations]);
+  }, [activité, reservations, terrains]);
 
   const UpdateData = (e) => {
     setForm({
@@ -141,14 +131,14 @@ const NouvelleReservationComponent = () => {
       setLoading(false);
     }
   };
-  const handleConfirm = async () => {
+  const handleConfirmDraft = async () => {
     if (!pendingReservation) {
       setErrorMessage("No reservation selected for confirmation.");
       return;
     }
     setLoading(true);
     try {
-      const updatedReservation = await updateReservationStatus(pendingReservation.reservation.id);
+      await updateReservationStatus(pendingReservation.reservation.id);
       setShowModal(false);
       setPendingReservation(null);
       setErrorMessage("");
@@ -162,9 +152,34 @@ const NouvelleReservationComponent = () => {
     }
   };
 
-  const handleEventClick = () => {
+  const handleEventClick = (eventInfo) => {
+    const reservationId = eventInfo.event.extendedProps.id;
+    setSelectedReservationId(reservationId);
     setModalType("delete");
     setShowModal(true);
+  };
+
+  const handleConfirmCancel = async () => {
+    if (!selectedReservationId) {
+      setErrorMessage("No reservation selected for cancellation.");
+      return;
+    }
+    setLoading(true);
+    try {
+      await cancelReservation(selectedReservationId);
+      setShowModal(false);
+      setSelectedReservationId(null);
+      const updatedReservations = await fetchReservations();
+      setReservations(updatedReservations);
+      setErrorMessage("");
+    } catch (error) {
+      console.error("Error cancelling reservation:", error);
+      setErrorMessage(
+        error.response?.data?.error || "Failed to cancel reservation. Please try again.",
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleModalClose = () => {
@@ -175,7 +190,6 @@ const NouvelleReservationComponent = () => {
   return (
     <main className="flex w-full bg-gray-100 overflow-y-auto">
       <div className="flex flex-col w-full space-y-8 py-4 px-4">
-        {errorMessage && <div className="bg-red-500 text-white p-2 rounded">{errorMessage}</div>}
         <div className="flex w-full flex-col lg:flex-row gap-6">
           <div className="flex w-full lg:w-2/3 flex-col space-y-4">
             <div className="flex lg:flex-row flex-col w-full lg:justify-evenly">
@@ -249,9 +263,8 @@ const NouvelleReservationComponent = () => {
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white px-8 py-2 rounded focus:outline-none focus:shadow-outline"
                   type="submit"
-                  disabled={loading}
                 >
-                  {loading ? "Loading..." : "Procéder"}
+                  Procéder
                 </button>
               </div>
             </form>
@@ -264,14 +277,14 @@ const NouvelleReservationComponent = () => {
           body={
             modalType === "confirm"
               ? "Voulez-vous confirmer cette réservation ?"
-              : "Voulez-vous supprimer cette réservation ?"
+              : "Voulez-vous annuler cette réservation ?"
           }
           onClose={handleModalClose}
-          onSave={modalType === "confirm" ? handleConfirm : handleConfirm}
+          onSave={modalType === "confirm" ? handleConfirmDraft : handleConfirmCancel}
         />
       )}
     </main>
   );
 };
 
-export default NouvelleReservationComponent;
+export default ReservationComponent;
