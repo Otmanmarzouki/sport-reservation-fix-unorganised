@@ -15,8 +15,8 @@ const TerrainSelector = ({ terrains, selectedTerrain, onTerrainChange }) => {
       >
         <option value="">All Terrains</option>
         {terrains.map((terrain) => (
-          <option key={terrain.id} value={terrain.id}>
-            {terrain.activité}
+          <option key={terrain.terrain_id} value={terrain.terrain_id}>
+            {terrain.terrain_name}
           </option>
         ))}
       </select>

@@ -4,38 +4,24 @@ import MiniCalendar from "./MiniCalendar";
 import TerrainSelector from "./Selector";
 import Search from "./Search";
 import Legend from "./Legend";
-import { fetchTerrains } from "@/services/reservation";
 
 export default function HistoricComponent() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTerrain, setSelectedTerrain] = useState(null);
   const [terrains, setTerrains] = useState([]);
   const [events, setEvents] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const fetchedTerrains = await fetchTerrains();
-        setTerrains(fetchedTerrains);
-        fetchAvailability(selectedDate, null);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, [selectedDate]);
+    fetchAvailability(selectedDate, selectedTerrain);
+  }, [selectedDate, selectedTerrain]);
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-    fetchAvailability(date, selectedTerrain);
-  };
+  const handleDateChange = (date) => setSelectedDate(date);
 
-  const handleTerrainChange = (terrainId) => {
-    setSelectedTerrain(terrainId);
-    fetchAvailability(selectedDate, terrainId);
-  };
+  const handleTerrainChange = (terrainId) => setSelectedTerrain(terrainId);
 
   const fetchAvailability = async (date, terrainId) => {
+    setIsLoading(true);
     try {
       const response = await fetch("http://127.0.0.1:8000/api/check-availability", {
         method: "POST",
@@ -48,14 +34,15 @@ export default function HistoricComponent() {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
+      if (!response.ok) throw new Error(`Error: ${response.statusText}`);
 
       const data = await response.json();
+      setTerrains(data);
       setEvents(data);
     } catch (error) {
       console.error("Error fetching availability:", error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -69,11 +56,16 @@ export default function HistoricComponent() {
               selectedTerrain={selectedTerrain}
               onTerrainChange={handleTerrainChange}
             />
-            <Calendar
-              events={events}
-              handleEventClick={(info) => console.log("Clicked:", info.event)}
-            />
+            {isLoading ? (
+              <div className="text-center text-gray-500">Loading Calendar...</div>
+            ) : (
+              <Calendar
+                events={events}
+                handleEventClick={(info) => console.log("Clicked:", info.event)}
+              />
+            )}
           </div>
+
           <div className="lg:w-1/3 w-full flex flex-col gap-8">
             <Search />
             <div className="bg-white p-4 rounded-lg">
