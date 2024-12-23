@@ -110,7 +110,6 @@ const ReservationComponent = () => {
       DateFin: selectedDateRange.endDate,
     };
 
-    setLoading(true);
     try {
       const savedReservation = await addReservation(formData);
       setPendingReservation(savedReservation);
@@ -128,7 +127,6 @@ const ReservationComponent = () => {
       console.error("Error adding reservation:", error);
       setErrorMessage("Failed to add reservation. Please try again.");
     } finally {
-      setLoading(false);
     }
   };
   const handleConfirmDraft = async () => {
@@ -136,7 +134,7 @@ const ReservationComponent = () => {
       setErrorMessage("No reservation selected for confirmation.");
       return;
     }
-    setLoading(true);
+
     try {
       await updateReservationStatus(pendingReservation.reservation.id);
       setShowModal(false);
@@ -148,7 +146,6 @@ const ReservationComponent = () => {
         error.response?.data?.error || "Failed to confirm reservation. Please try again.",
       );
     } finally {
-      setLoading(false);
     }
   };
 
@@ -164,7 +161,7 @@ const ReservationComponent = () => {
       setErrorMessage("No reservation selected for cancellation.");
       return;
     }
-    setLoading(true);
+
     try {
       await cancelReservation(selectedReservationId);
       setShowModal(false);
@@ -178,7 +175,6 @@ const ReservationComponent = () => {
         error.response?.data?.error || "Failed to cancel reservation. Please try again.",
       );
     } finally {
-      setLoading(false);
     }
   };
 

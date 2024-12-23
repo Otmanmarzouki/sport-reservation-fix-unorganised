@@ -45,8 +45,8 @@ const UserSettings = () => {
   };
 
   return (
-    <main className="flex flex-col items-center w-full bg-gray-100 py-8 px-4 space-y-8">
-      <div className="w-full max-w-3xl bg-white shadow-lg rounded-lg p-6">
+    <main className="min-h-screen w-full bg-gray-100 py-8 px-4">
+      <div className="w-full max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
         <div className="relative flex items-center space-x-4">
           <label
             htmlFor="avatarUpload"
@@ -90,10 +90,10 @@ const UserSettings = () => {
         </div>
       </div>
 
-      <div className="w-full max-w-3xl bg-white shadow-lg rounded-lg p-6">
+      <div className="w-full max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-8">
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div>
+          <div className="flex flex-wrap -mx-3">
+            <div className="w-full lg:w-1/2 px-3 mb-4 lg:mb-0">
               <label className="block text-sm font-medium text-gray-700">Nom d'usage</label>
               <input
                 type="text"
@@ -104,7 +104,7 @@ const UserSettings = () => {
                 required
               />
             </div>
-            <div>
+            <div className="w-full lg:w-1/2 px-3">
               <label className="block text-sm font-medium text-gray-700">Date de naissance</label>
               <input
                 type="date"
@@ -116,8 +116,8 @@ const UserSettings = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div>
+          <div className="flex flex-wrap -mx-3">
+            <div className="w-full lg:w-1/2 px-3 mb-4 lg:mb-0">
               <label className="block text-sm font-medium text-gray-700">Adresse e-mail</label>
               <input
                 type="email"
@@ -128,7 +128,7 @@ const UserSettings = () => {
                 required
               />
             </div>
-            <div>
+            <div className="w-full lg:w-1/2 px-3">
               <label className="block text-sm font-medium text-gray-700">Numéro de téléphone</label>
               <input
                 type="text"
@@ -140,8 +140,8 @@ const UserSettings = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div>
+          <div className="flex flex-wrap -mx-3">
+            <div className="w-full lg:w-1/2 px-3 mb-4 lg:mb-0">
               <label className="block text-sm font-medium text-gray-700">Adresse</label>
               <input
                 type="text"
@@ -151,8 +151,7 @@ const UserSettings = () => {
                 placeholder="Entrer votre adresse"
               />
             </div>
-
-            <div>
+            <div className="w-full lg:w-1/2 px-3">
               <label className="block text-sm font-medium text-gray-700">Genre</label>
               <select
                 value={genre}
