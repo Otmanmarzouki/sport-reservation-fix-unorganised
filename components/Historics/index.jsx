@@ -13,14 +13,14 @@ export default function HistoricComponent() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    fetchAvailability(selectedDate, selectedTerrain);
+    fetchAvailability(selectedTerrain);
   }, [selectedDate, selectedTerrain]);
 
   const handleDateChange = (date) => setSelectedDate(date);
 
   const handleTerrainChange = (terrainId) => setSelectedTerrain(terrainId);
 
-  const fetchAvailability = async (date, terrainId) => {
+  const fetchAvailability = async () => {
     setIsLoading(true);
     try {
       const response = await fetch("http://127.0.0.1:8000/api/check-availability", {
@@ -29,16 +29,19 @@ export default function HistoricComponent() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          Date: date.toISOString().split("T")[0],
-          terrainId: terrainId || null,
+          terrain_id: selectedTerrain,
         }),
       });
 
       if (!response.ok) throw new Error(`Error: ${response.statusText}`);
-
       const data = await response.json();
-      setTerrains(data);
-      setEvents(data);
+      if (selectedTerrain) {
+        setEvents([data]);
+      } else {
+        setEvents(data);
+      }
+
+      setTerrains(Array.isArray(data) ? data : [data]);
     } catch (error) {
       console.error("Error fetching availability:", error.message);
     } finally {
