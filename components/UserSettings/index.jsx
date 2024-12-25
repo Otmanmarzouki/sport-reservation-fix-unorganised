@@ -1,24 +1,24 @@
-/* eslint-disable react/no-unescaped-entities */
-
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import Header from "../../Commons/Header";
 
 const UserSettings = () => {
-  const [nomUsage, setNomUsage] = useState("");
-  const [dateNaissance, setDateNaissance] = useState("");
-  const [email, setEmail] = useState("");
-  const [numeroTelephone, setNumeroTelephone] = useState("");
-  const [adresse, setAdresse] = useState("");
-  const [genre, setGenre] = useState("");
+  const [user, setUser] = useState({
+    nomUsage: "",
+    dateNaissance: "",
+    email: "",
+    numeroTelephone: "",
+    adresse: "",
+    genre: "",
+  });
   const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
-    const userName = localStorage.getItem("userName");
-    const userEmail = localStorage.getItem("userEmail");
-
-    if (userName) setNomUsage(userName);
-    if (userEmail) setEmail(userEmail);
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
   }, []);
 
   const handleImageChange = (e) => {
@@ -34,20 +34,21 @@ const UserSettings = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({
-      nomUsage,
-      dateNaissance,
-      email,
-      numeroTelephone,
-      adresse,
-      genre,
-    });
+    console.log(user);
+    localStorage.setItem("user", JSON.stringify(user));
+  };
+
+  const handleChange = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
   };
 
   return (
-    <main className="min-h-screen w-full bg-gray-100 py-8 px-4">
-      <div className="w-full max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
-        <div className="relative flex items-center space-x-4">
+    <main className="flex flex-col w-full bg-gray-100 overflow-y-auto px-4 space-y-6">
+      <div className="flex flex-col lg:flex-row justify-between mt-7 lg:w-auto ">
+        <Header title="Réservations" className="text-2xl" />
+      </div>
+      <div className=" w-full max-w-3xl mx-auto bg-white shadow-lg  rounded-lg p-6 mt-7">
+        <div className="relative flex items-center justify-center space-x-4">
           <label
             htmlFor="avatarUpload"
             className="cursor-pointer group relative flex flex-col items-center"
@@ -62,14 +63,14 @@ const UserSettings = () => {
             <div className="flex space-x-4 mt-2">
               <button
                 onClick={() => document.getElementById("avatarUpload").click()}
-                className="text-indigo-500 hover:text-indigo-700 transition-colors duration-200 p-1 rounded-full hover:bg-indigo-100"
+                className="text-indigo-500 hover:text-indigo-700 transition-colors duration-200 p-2 rounded-full hover:bg-indigo-100"
                 title="Modifier"
               >
                 <FaEdit size={16} />
               </button>
               <button
                 onClick={handleImageRemove}
-                className="text-red-500 hover:text-red-700 transition-colors duration-200 p-1 rounded-full hover:bg-red-100"
+                className=" text-red-500 hover:text-red-700 transition-colors duration-200 p-2 rounded-full hover:bg-red-100"
                 title="Supprimer"
               >
                 <FaTrash size={16} />
@@ -84,8 +85,8 @@ const UserSettings = () => {
             />
           </label>
           <div>
-            <h3 className="text-xl font-bold">{nomUsage || "Nom d'usage"}</h3>
-            <p className="text-gray-500">{email || "Adresse email"}</p>
+            <h3 className="text-xl font-bold">{user.nomUsage || "Nom d'usage"}</h3>
+            <p className="text-gray-500">{user.email || "Adresse email"}</p>
           </div>
         </div>
       </div>
@@ -94,23 +95,25 @@ const UserSettings = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex flex-wrap -mx-3">
             <div className="w-full lg:w-1/2 px-3 mb-4 lg:mb-0">
-              <label className="block text-sm font-medium text-gray-700">Nom d'usage</label>
+              <label className="block text-xs font-medium text-gray-500">Nom d'utilisateur</label>
               <input
                 type="text"
-                value={nomUsage}
-                onChange={(e) => setNomUsage(e.target.value)}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                name="nomUsage"
+                value={user.nomUsage}
+                onChange={handleChange}
+                className="mt-1 block w-full p-2 border text-sm border-gray-300 rounded-md"
                 placeholder="Entrez votre nom d'usage"
                 required
               />
             </div>
             <div className="w-full lg:w-1/2 px-3">
-              <label className="block text-sm font-medium text-gray-700">Date de naissance</label>
+              <label className="block text-xs font-medium text-gray-500">Date de naissance</label>
               <input
                 type="date"
-                value={dateNaissance}
-                onChange={(e) => setDateNaissance(e.target.value)}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                name="dateNaissance"
+                value={user.dateNaissance}
+                onChange={handleChange}
+                className="mt-1 block w-full p-2 text-sm border border-gray-300 rounded-md"
                 required
               />
             </div>
@@ -118,23 +121,25 @@ const UserSettings = () => {
 
           <div className="flex flex-wrap -mx-3">
             <div className="w-full lg:w-1/2 px-3 mb-4 lg:mb-0">
-              <label className="block text-sm font-medium text-gray-700">Adresse e-mail</label>
+              <label className="block text-xs font-medium text-gray-500">E-mail</label>
               <input
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                name="email"
+                value={user.email}
+                onChange={handleChange}
+                className="mt-1 block w-full p-2 text-sm border border-gray-300 rounded-md"
                 placeholder="Entrez votre email"
                 required
               />
             </div>
             <div className="w-full lg:w-1/2 px-3">
-              <label className="block text-sm font-medium text-gray-700">Numéro de téléphone</label>
+              <label className="block text-xs font-medium text-gray-500">téléphone</label>
               <input
                 type="text"
-                value={numeroTelephone}
-                onChange={(e) => setNumeroTelephone(e.target.value)}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                name="numeroTelephone"
+                value={user.numeroTelephone}
+                onChange={handleChange}
+                className="mt-1 block w-full p-2 text-sm border border-gray-300 rounded-md"
                 placeholder="Entrez votre numéro de téléphone"
               />
             </div>
@@ -142,21 +147,23 @@ const UserSettings = () => {
 
           <div className="flex flex-wrap -mx-3">
             <div className="w-full lg:w-1/2 px-3 mb-4 lg:mb-0">
-              <label className="block text-sm font-medium text-gray-700">Adresse</label>
+              <label className="block text-xs font-medium text-gray-500">Adresse</label>
               <input
                 type="text"
-                value={adresse}
-                onChange={(e) => setAdresse(e.target.value)}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                name="adresse"
+                value={user.adresse}
+                onChange={handleChange}
+                className="mt-1 block w-full p-2 text-sm border border-gray-300 rounded-md"
                 placeholder="Entrer votre adresse"
               />
             </div>
             <div className="w-full lg:w-1/2 px-3">
-              <label className="block text-sm font-medium text-gray-700">Genre</label>
+              <label className="block text-xs font-medium text-gray-500">Genre</label>
               <select
-                value={genre}
-                onChange={(e) => setGenre(e.target.value)}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                name="genre"
+                value={user.genre}
+                onChange={handleChange}
+                className="mt-1 block w-full p-2 text-sm border border-gray-200 rounded-md"
               >
                 <option value="">Sélectionnez votre genre</option>
                 <option value="Monsieur">Monsieur</option>
@@ -169,7 +176,7 @@ const UserSettings = () => {
           <div className="flex justify-end">
             <button
               type="submit"
-              className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
+              className="bg-orange-400 hover:bg-orange-700 text-white font-medium py-1 px-4 rounded"
             >
               Enregistrer
             </button>

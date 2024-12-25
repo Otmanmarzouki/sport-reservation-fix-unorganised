@@ -9,6 +9,7 @@ export default function AuthForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({});
 
   const handleFormSwitch = (formType) => {
     setIsSignUp(formType === "signup");
@@ -17,6 +18,7 @@ export default function AuthForm() {
     }
     setEmail("");
     setPassword("");
+    setErrors({});
   };
 
   return (
@@ -67,8 +69,16 @@ export default function AuthForm() {
             password={password}
             name={isSignUp ? name : null}
             isSignUp={isSignUp}
+            setErrors={setErrors}
           />
         </form>
+        {Object.keys(errors).length > 0 && (
+          <div className="flex flex-col justify-center text-gray-600 text-xs m-2">
+            {Object.values(errors).map((error, index) => (
+              <div key={index}>{error}</div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -12,6 +12,8 @@ export default function Acceuil() {
   const [draftCount, setDraftCount] = useState(0);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    console.log(token);
     async function fetchData() {
       try {
         const response = await fetch("http://localhost:8000/api/drafts");
@@ -38,7 +40,7 @@ export default function Acceuil() {
 
   return (
     <main className="flex flex-col w-full bg-gray-100 overflow-y-auto px-4 space-y-4">
-      <div className="flex flex-col lg:flex-row justify-between pt-7  lg:w-auto ">
+      <div className="flex flex-col lg:flex-row justify-between mt-7 lg:w-auto ">
         <Header title="Réservations" className="text-2xl" />
         <button className="bg-blue-500 text-white px-4 py-2 rounded-[15px] hover:bg-blue-600">
           NOUVELLE RESERVATION

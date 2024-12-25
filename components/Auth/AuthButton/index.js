@@ -2,18 +2,40 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth } from "@/services/auth";
 
-export default function AuthButton({ isSignUp, name, email, password }) {
+export default function AuthButton({ isSignUp, name, email, password, setErrors }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState("");
+
+  const validateForm = (isSignUp, name, email, password) => {
+    const errors = {};
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+      errors.email = "L'email est requis et doit être valide.";
+    }
+    if (!password) {
+      errors.password = "Le mot de passe est requis.";
+    } else if (password.length < 6) {
+      errors.password = "Le mot de passe doit contenir au moins 6 caractères.";
+    }
+    if (isSignUp && !name) {
+      errors.name = "Le nom est requis.";
+    }
+
+    return errors;
+  };
 
   const handleAuth = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setErrors("");
+    setErrors({});
+    const validationErrors = validateForm(isSignUp, name, email, password);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      setLoading(false);
+      return;
+    }
     try {
       const data = await auth(isSignUp, name, email, password);
-      console.log(data)
+      console.log(data);
       localStorage.setItem("userName", data.user.name);
       localStorage.setItem("userEmail", data.user.email);
       localStorage.setItem("token", data.token);
@@ -54,9 +76,6 @@ export default function AuthButton({ isSignUp, name, email, password }) {
           "Se connecter"
         )}
       </button>
-      {errors && (
-        <span className="flex items-center justify-center text-red-600 text-xs">{errors}</span>
-      )}
     </div>
   );
 }
