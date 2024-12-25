@@ -2,25 +2,19 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Header from "../../Commons/Header";
+import useUser from "@/hooks/useUser";
+import Loader from "@/Commons/Loader";
 
 const UserSettings = () => {
-  const [user, setUser] = useState({
-    nomUsage: "",
-    dateNaissance: "",
-    email: "",
-    numeroTelephone: "",
-    adresse: "",
-    genre: "",
-  });
   const [imagePreview, setImagePreview] = useState(null);
+  const { user: fetchedUser, loading, error } = useUser();
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    if (fetchedUser) {
+      setUser(fetchedUser);
     }
-  }, []);
-
+  }, [fetchedUser]);
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -42,6 +36,13 @@ const UserSettings = () => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
+  if (loading || !user) {
+    return (
+      <main className="flex flex-col w-full bg-gray-100 overflow-y-auto px-4 space-y-6">
+        <Loader />
+      </main>
+    );
+  }
   return (
     <main className="flex flex-col w-full bg-gray-100 overflow-y-auto px-4 space-y-6">
       <div className="flex flex-col lg:flex-row justify-between mt-7 lg:w-auto ">
@@ -85,8 +86,8 @@ const UserSettings = () => {
             />
           </label>
           <div>
-            <h3 className="text-xl font-bold">{user.nomUsage || "Nom d'usage"}</h3>
-            <p className="text-gray-500">{user.email || "Adresse email"}</p>
+            <h3 className="text-xl font-bold">{user?.name || "Nom inconnu"}</h3>
+            <p className="text-gray-500">{user?.email || "Email inconnu"}</p>
           </div>
         </div>
       </div>
@@ -95,11 +96,11 @@ const UserSettings = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex flex-wrap -mx-3">
             <div className="w-full lg:w-1/2 px-3 mb-4 lg:mb-0">
-              <label className="block text-xs font-medium text-gray-500">Nom d'utilisateur</label>
+              <label className="block text-xs font-medium text-gray-500">Utilisateur</label>
               <input
                 type="text"
                 name="nomUsage"
-                value={user.nomUsage}
+                value={user?.name}
                 onChange={handleChange}
                 className="mt-1 block w-full p-2 border text-sm border-gray-300 rounded-md"
                 placeholder="Entrez votre nom d'usage"
@@ -111,7 +112,7 @@ const UserSettings = () => {
               <input
                 type="date"
                 name="dateNaissance"
-                value={user.dateNaissance}
+                value={user ? user?.dob : ""}
                 onChange={handleChange}
                 className="mt-1 block w-full p-2 text-sm border border-gray-300 rounded-md"
                 required
@@ -125,7 +126,7 @@ const UserSettings = () => {
               <input
                 type="email"
                 name="email"
-                value={user.email}
+                value={user?.email}
                 onChange={handleChange}
                 className="mt-1 block w-full p-2 text-sm border border-gray-300 rounded-md"
                 placeholder="Entrez votre email"
@@ -137,7 +138,7 @@ const UserSettings = () => {
               <input
                 type="text"
                 name="numeroTelephone"
-                value={user.numeroTelephone}
+                value={user ? user?.tel : ""}
                 onChange={handleChange}
                 className="mt-1 block w-full p-2 text-sm border border-gray-300 rounded-md"
                 placeholder="Entrez votre numéro de téléphone"
@@ -151,7 +152,7 @@ const UserSettings = () => {
               <input
                 type="text"
                 name="adresse"
-                value={user.adresse}
+                value={user ? user?.adresse : ""}
                 onChange={handleChange}
                 className="mt-1 block w-full p-2 text-sm border border-gray-300 rounded-md"
                 placeholder="Entrer votre adresse"
@@ -161,7 +162,7 @@ const UserSettings = () => {
               <label className="block text-xs font-medium text-gray-500">Genre</label>
               <select
                 name="genre"
-                value={user.genre}
+                value={user ? user?.gender : ""}
                 onChange={handleChange}
                 className="mt-1 block w-full p-2 text-sm border border-gray-200 rounded-md"
               >
