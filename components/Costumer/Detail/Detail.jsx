@@ -30,7 +30,6 @@ export default function Detail() {
     formData.append("logo", file);
     try {
       const response = await uploadClientLogo(id, formData);
-      console.log("Upload response:", response);
       setClient((prevClient) => ({
         ...prevClient,
         data: { ...prevClient.data, logo: response.logo },
