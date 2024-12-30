@@ -1,12 +1,31 @@
-import React from "react";
+// components/Header.js
+import React, { useEffect } from "react";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { FaBars } from "react-icons/fa";
 import Image from "next/image";
 import logo from "@/public/img/logo.png";
-import avatar from "@/public/img/avatar.jpg";
+import useUser from "@/hooks/useUser";
 
 export default function Header({ handleToggle }) {
+  const { user, loading, error } = useUser();
+
+  if (loading) {
+    return (
+      <header className="flex items-center justify-between bg-white h-16 px-5 shadow-lg">
+        <div>Loading...</div>
+      </header>
+    );
+  }
+
+  if (error) {
+    return (
+      <header className="flex items-center justify-between bg-white h-16 px-5 shadow-lg">
+        <div>Error loading user data</div>
+      </header>
+    );
+  }
+
   return (
     <header className="flex items-center justify-between bg-white h-16 px-5 shadow-lg">
       <button onClick={handleToggle} className="lg:hidden text-xl text-gray-800">
@@ -25,10 +44,19 @@ export default function Header({ handleToggle }) {
           <div className="absolute top-0 right-0 h-3 w-3 bg-blue-600 rounded-full"></div>
         </div>
         <div className="flex items-center space-x-2">
-          <Image src={avatar} className="h-12 w-12 rounded-full" alt="User Avatar" />
+          <Image
+            src={
+              user?.avatar
+                ? `http://127.0.0.1:8000/storage/${user?.avatar}`
+                : `http://127.0.0.1:8000/storage/logos/avatar/maleAvatar.png`
+            }
+            width={100}
+            height={100}
+            className="h-12 w-12 rounded-full"
+            alt="User Avatar"
+          />
           <div className="flex flex-col justify-center">
-            <div className="text-black text-sm font-semibold">El marzouki</div>
-            <div className="text-gray-600 text-xs">Otman</div>
+            <div className="text-black text-xs font-semibold">{user?.name || ""}</div>
           </div>
           <MdKeyboardArrowDown className="text-blue-600 h-6 w-6" />
         </div>

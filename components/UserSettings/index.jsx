@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import useUserStore from "@/Stores/userStore";
 import { motion } from "framer-motion";
 import Header from "../../Commons/Header";
 import useUser from "@/hooks/useUser";
 import Loader from "@/Commons/Loader";
-import { FaRegTrashAlt } from "react-icons/fa";
+import { FaAvianex, FaRegTrashAlt } from "react-icons/fa";
 
 const UserSettings = () => {
-  const { user: fetchedUser, loading, error } = useUser();
-  const [user, setUser] = useState({
+  const { user, loading, error } = useUser();
+  const { setUser, setAvatar } = useUserStore();
+  const [formValues, setFormValues] = useState({
     name: "",
     dob: "",
     email: "",
@@ -16,77 +18,78 @@ const UserSettings = () => {
     adresse: "",
     gender: "",
   });
-  const [avatar, setAvatar] = useState(null);
-  useEffect(() => {
-    if (fetchedUser) {
-      setUser({
-        name: fetchedUser.name || "",
-        email: fetchedUser.email || "",
-        dob: fetchedUser.dob || "",
-        tel: fetchedUser.tel || "",
-        adresse: fetchedUser.adresse || "",
-        gender: fetchedUser.gender || "",
-      });
-      setAvatar(
-        fetchedUser.avatar
-          ? `http://127.0.0.1:8000/storage/${fetchedUser.avatar}`
-          : `http://127.0.0.1:8000/storage/logos/avatar/maleAvatar.png`,
-      );
-    }
-  }, [fetchedUser]);
 
+  useEffect(() => {
+    if (user) {
+      setFormValues({
+        name: user.name || "",
+        dob: user.dob || "",
+        email: user.email || "",
+        tel: user.tel || "",
+        adresse: user.adresse || "",
+        gender: user.gender || "",
+      });
+    }
+  }, [user]);
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser((prevUser) => ({ ...prevUser, [name]: value }));
+    setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("name", user.name);
-    formData.append("email", user.email);
-    formData.append("dob", user.dob);
-    formData.append("tel", user.tel);
-    formData.append("adresse", user.adresse);
-    formData.append("gender", user.gender);
+    Object.keys(formValues).forEach((key) => {
+      if (formValues[key]) formData.append(key, formValues[key]);
+    });
 
     try {
       const response = await fetch("http://127.0.0.1:8000/api/user/modifier", {
-        method: "post",
+        method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: formData,
       });
 
+      if (!response.ok) {
+        throw new Error("Failed to update user");
+      }
       const data = await response.json();
-    } catch (error) {
-      console.error("Error updating profile:", error);
+      setUser(data.user);
+    } catch (err) {
+      console.error("Error updating profile:", err);
     }
   };
 
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const imageURL = URL.createObjectURL(file);
-      setAvatar(imageURL);
-      const formData = new FormData();
-      formData.append("avatar", file);
+  const handleUpload = async (file) => {
+    const formData = new FormData();
+    formData.append("avatar", file);
 
-      try {
-        const response = await fetch("http://127.0.0.1:8000/api/user/modifier", {
-          method: "post",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: avatar,
-        });
-        const data = await response.json();
-      } catch (error) {
-        console.error("Error updating profile:", error);
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/user/modifier", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to upload avatar");
       }
+
+      const data = await response.json();
+      setAvatar(data.user.avatar);
+    } catch (err) {
+      console.error("Error uploading avatar:", err);
     }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) handleUpload(file);
   };
 
   if (loading || !user) {
@@ -104,7 +107,7 @@ const UserSettings = () => {
       className="flex flex-col w-full bg-gray-100 overflow-y-auto px-4 space-y-6"
     >
       <div className="max-w-4xl mx-auto w-full">
-        <Header title="Paramètres utilisateur" className="m-10 text-2xl " />
+        <Header title="Paramètres utilisateur" className="m-10 text-3xl " />
 
         <motion.div
           initial={{ y: 20, opacity: 0 }}
@@ -116,11 +119,14 @@ const UserSettings = () => {
             <div className="relative group">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Image
-                  src={avatar}
+                  src={
+                    `http://127.0.0.1:8000/storage/${user.avatar}` ||
+                    `http://127.0.0.1:8000/storage/logos/avatar/maleAvatar.png`
+                  }
                   width={100}
                   height={100}
                   alt="User Avatar"
-                  className="rounded-full   w-32 h-32 object-cover transition duration-300 ease-in-out group-hover:opacity-75"
+                  className="rounded-full w-32 h-32 object-cover transition duration-300 ease-in-out group-hover:opacity-75"
                 />
                 <label
                   htmlFor="avatarUpload"
@@ -145,7 +151,7 @@ const UserSettings = () => {
               </motion.button>
             </div>
             <div className="text-center sm:text-left">
-              <h3 className="text-3xl font-semibold text-gray-800 mb-2">
+              <h3 className="text-2xl font-semibold text-gray-800 mb-2">
                 {user.name || "Nom inconnu"}
               </h3>
               <p className="text-gray-500 mb-4">{user.email || "Email inconnu"}</p>
@@ -169,9 +175,9 @@ const UserSettings = () => {
                 type="text"
                 name="name"
                 id="name"
-                value={user.name}
+                value={formValues.name}
                 onChange={handleChange}
-                className="block w-full border-gray-300 rounded-full shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300 sm:text-sm"
+                className="block w-full border-gray-200 rounded-full shadow-sm  p-2   transition duration-300 sm:text-sm"
                 placeholder="Entrez votre nom d'usage"
                 required
               />
@@ -184,9 +190,9 @@ const UserSettings = () => {
                 type="date"
                 name="dob"
                 id="dob"
-                value={user.dob}
+                value={formValues.dob}
                 onChange={handleChange}
-                className="block w-full border-gray-300 rounded-full shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300 sm:text-sm"
+                className="block w-full border-gray-200 rounded-full shadow-sm  p-2   transition duration-300 sm:text-sm"
                 required
               />
             </div>
@@ -198,9 +204,9 @@ const UserSettings = () => {
                 type="email"
                 name="email"
                 id="email"
-                value={user.email}
+                value={formValues.email}
                 onChange={handleChange}
-                className="block w-full border-gray-300 rounded-full shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300 sm:text-sm"
+                className="block w-full border-gray-200 rounded-full shadow-sm  p-2   transition duration-300 sm:text-sm"
                 placeholder="Entrez votre email"
                 required
               />
@@ -213,9 +219,9 @@ const UserSettings = () => {
                 type="tel"
                 name="tel"
                 id="tel"
-                value={user.tel}
+                value={formValues.tel}
                 onChange={handleChange}
-                className="block w-full border-gray-300 rounded-full shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300 sm:text-sm"
+                className="block w-full border-gray-200 rounded-full shadow-sm  p-2   transition duration-300 sm:text-sm"
                 placeholder="Entrez votre numéro de téléphone"
               />
             </div>
@@ -227,9 +233,9 @@ const UserSettings = () => {
                 type="text"
                 name="adresse"
                 id="adresse"
-                value={user.adresse}
+                value={formValues.adresse}
                 onChange={handleChange}
-                className="block w-full border-gray-300 rounded-full shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300 sm:text-sm"
+                className="block w-full border-gray-200 rounded-full shadow-sm  p-2   transition duration-300 sm:text-sm"
                 placeholder="Entrer votre adresse"
               />
             </div>
@@ -240,9 +246,9 @@ const UserSettings = () => {
               <select
                 name="gender"
                 id="gender"
-                value={user.gender}
+                value={formValues.gender}
                 onChange={handleChange}
-                className="block w-full border-gray-300 rounded-full shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300 sm:text-sm"
+                className="block w-full border-gray-200 rounded-full shadow-sm  p-2   transition duration-300 sm:text-sm"
               >
                 <option value="">Sélectionnez votre genre</option>
                 <option value="Monsieur">Monsieur</option>
@@ -257,7 +263,7 @@ const UserSettings = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               type="submit"
-              className="inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-full text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300"
+              className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-full text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300"
             >
               Enregistrer
             </motion.button>
