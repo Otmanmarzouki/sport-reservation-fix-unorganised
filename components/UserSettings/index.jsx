@@ -49,6 +49,7 @@ const UserSettings = () => {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Accept: "application/json",
         },
         body: formData,
       });
@@ -72,6 +73,7 @@ const UserSettings = () => {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Accept: "application/json",
         },
         body: formData,
       });

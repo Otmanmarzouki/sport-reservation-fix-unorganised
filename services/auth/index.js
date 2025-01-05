@@ -1,5 +1,5 @@
 export const auth = async (isSignUp, name, email, password) => {
-  const url = isSignUp ? "http://127.0.0.1:8000/api/signup" : "http://127.0.0.1:8000/api/login";
+  const url = isSignUp ? "http://localhost:8000/api/signup" : "http://localhost:8000/api/login";
 
   const body = isSignUp
     ? JSON.stringify({ name, email, password })
@@ -8,10 +8,8 @@ export const auth = async (isSignUp, name, email, password) => {
   try {
     const response = await fetch(url, {
       method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
 
       body: body,
     });
