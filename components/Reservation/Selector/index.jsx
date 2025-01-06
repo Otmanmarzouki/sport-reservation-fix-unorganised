@@ -1,22 +1,21 @@
 import React from "react";
 
-const TerrainSelector = ({ terrains, selectedTerrain, onTerrainChange }) => {
+const TerrainSelector = ({ terrains, selectedTerrain, handleTerrainChange }) => {
   const handleChange = (e) => {
-    const selectedValue = e.target.value === "" ? null : e.target.value;
-    onTerrainChange(selectedValue);
+    handleTerrainChange(e.target.value);
   };
 
   return (
-    <div className="flex w-full justify-center">
+    <div>
       <select
-        className="py-1 rounded-md text-sm lg:px-8 border-2"
         value={selectedTerrain || ""}
         onChange={handleChange}
+        className="shadow w-full appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
       >
-        <option value="">All Terrains</option>
+        <option value="">Select Terrain</option>
         {terrains.map((terrain) => (
-          <option key={terrain.terrain_id} value={terrain.terrain_id}>
-            {terrain.terrain_name}
+          <option key={terrain.id} value={terrain.activité}>
+            {terrain.activité}
           </option>
         ))}
       </select>

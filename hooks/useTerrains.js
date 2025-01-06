@@ -1,29 +1,34 @@
-// hooks/useReservations.js
+// useTerrains.js (modified)
 import { useState, useEffect } from "react";
-import { fetchTerrains } from "@/services/terrain";
+import { fetchTerrains } from "@/services/terrain/index";
 
 const useTerrains = () => {
   const [terrains, setTerrains] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [selectedTerrain, setSelectedTerrain] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
+    const fetchTerrainsData = async () => {
       try {
-        const fetchedTerrains = await fetchTerrains();
-        console.log("test", fetchedTerrains);
-        setTerrains(fetchedTerrains);
+        const data = await fetchTerrains();
+        console.log(data);
+        setTerrains(data);
       } catch (error) {
-        setErrorMessage("Failed to fetch reservations. Please try again later.");
-      } finally {
-        setLoading(false);
+        console.error("Error fetching terrains:", error);
       }
     };
-    fetchData();
+
+    fetchTerrainsData();
   }, []);
 
-  return { terrains, loading, errorMessage };
+  const handleTerrainChange = (terrainId) => {
+    setSelectedTerrain(terrainId === "" ? null : terrainId);
+  };
+
+  return {
+    terrains,
+    selectedTerrain,
+    handleTerrainChange,
+  };
 };
 
 export default useTerrains;

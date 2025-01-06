@@ -19,77 +19,63 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const checkWindowSize = () => {
-      if (typeof window !== "undefined") {
-        setIsMobile(window.innerWidth < 1024);
-      }
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
     };
 
-    checkWindowSize();
-    window.addEventListener("resize", checkWindowSize);
-    return () => window.removeEventListener("resize", checkWindowSize);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
     <>
+      {/* Backdrop for mobile */}
       {isOpen && isMobile && (
-        <div
-          className="fixed inset-0 bg-orange-500  z-50 lg:hidden"
-          onClick={toggleSidebar}
-        />
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-40" onClick={toggleSidebar} />
       )}
 
       <div
-        className={`fixed lg:static top-0 left-0 h-full lg:h-screen z-50 transition-transform transform bg-orange-400 text-white ${
-          isOpen ? (isMobile ? "w-full translate-x-0" : "lg:w-56") : "-translate-x-full"
+        className={`fixed lg:static top-0 left-0 h-full lg:h-screen z-50 bg-gradient-to-b from-orange-500 to-orange-700 text-white shadow-lg transition-transform duration-300 ease-in-out ${
+          isOpen ? (isMobile ? "translate-x-0 w-full " : "lg:w-64") : "-translate-x-full"
         } lg:translate-x-0`}
       >
-        <div className="p-4 flex flex-col h-full overflow-y-auto">
-          <button className="lg:hidden text-white mb-2">
-            <FaTimes />
-          </button>
+        {/* Sidebar Header */}
+        <div className="flex  justify-between border-orange-300">
+          {isMobile && (
+            <div className="flex w-full justify-end p-4">
+              <button
+                onClick={toggleSidebar}
+                className="text-white text-2xl lg:hidden"
+                aria-label="Close sidebar"
+              >
+                <FaTimes />
+              </button>
+            </div>
+          )}
+        </div>
 
-          <ul className={`flex flex-col space-y-2 ${isMobile ? "items-start px-2" : ""}`}>
-            <li>
-              <SidebarItem icon={<FaHome />} text="Accueil" />
-            </li>
-            <li>
-              <SidebarItem icon={<FaCalendarAlt />} text="Réservations" />
-            </li>
-            <li>
-              <SidebarItem icon={<FaChartBar />} text="Tableau de bord" />
-            </li>
-            <li>
-              <SidebarItem icon={<FaFutbol />} text="Terrains" />
-            </li>
-            <li>
-              <SidebarItem icon={<FaUsers />} text="Clients" />
-            </li>
-            <li>
-              <SidebarItem icon={<FaMoneyBill />} text="Chiffre d'affaire" />
-            </li>
-            <li>
-              <SidebarItem icon={<FaHistory />} text="Historique" />
-            </li>
+        {/* Scrollable Content */}
+        <nav className="p-2 space-y-3 h-full overflow-y-auto">
+          {/* Main Section */}
+          <ul className="space-y-2">
+            <SidebarItem icon={<FaHome />} text="Accueil" />
+            <SidebarItem icon={<FaCalendarAlt />} text="Réservations" />
+            <SidebarItem icon={<FaChartBar />} text="Tableau de bord" />
+            <SidebarItem icon={<FaFutbol />} text="Terrains" />
+            <SidebarItem icon={<FaUsers />} text="Clients" />
+            <SidebarItem icon={<FaMoneyBill />} text="Chiffre d'affaire" />
+            <SidebarItem icon={<FaHistory />} text="Historique" />
           </ul>
 
-          <div className="mt-32"  >
-            <ul className={`flex flex-col space-y-2 ${isMobile ? "items-start px-2" : ""}`}>
-              <li>
-                <SidebarItem icon={<FaBullhorn />} text="Marketing" />
-              </li>
-              <li>
-                <SidebarItem icon={<FaHeadset />} text="Support" />
-              </li>
-              <li>
-                <SidebarItem icon={<FaCog />} text="Paramètres" />
-              </li>
-              <li className="mt-2 w-full border-t-2 border-white pt-2">
-                <SidebarItem icon={<FaSignOutAlt />} text="Déconnexion" />
-              </li>
-            </ul>
-          </div>
-        </div>
+          {/* Secondary Section */}
+          <ul className="space-y-2  border-t border-orange-300 pt-10">
+            <SidebarItem icon={<FaBullhorn />} text="Marketing" />
+            <SidebarItem icon={<FaHeadset />} text="Support" />
+            <SidebarItem icon={<FaCog />} text="Paramètres" />
+            <SidebarItem icon={<FaSignOutAlt />} text="Déconnexion" />
+          </ul>
+        </nav>
       </div>
     </>
   );

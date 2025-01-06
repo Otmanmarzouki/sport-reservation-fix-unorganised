@@ -1,5 +1,4 @@
 import React from "react";
-import { FaUser } from "react-icons/fa"; // Import user icon
 
 export const renderEventContent = (eventInfo) => {
   return (

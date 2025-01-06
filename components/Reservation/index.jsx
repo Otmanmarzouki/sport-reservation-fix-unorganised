@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import useReservations from "@/hooks/useReservations";
+import useReservations from "@/hooks/useReservationActions";
 import useTerrains from "@/hooks/useTerrains";
 
 import {
@@ -10,6 +10,7 @@ import {
 import Calendar from "./Calendar";
 import { FaUserCircle } from "react-icons/fa";
 import Modal from "../../Commons/Modal/index";
+import TerrainSelector from "@/components/Reservation/Selector";
 
 const getRandomColor = () => {
   const colors = ["#FFDDC1", "#C1FFD7", "#D1C1FF", "#FFC1C1", "#FFF0C1"];
@@ -17,15 +18,10 @@ const getRandomColor = () => {
 };
 
 const ReservationComponent = () => {
-  const {
-    reservations,
-    loading: reservationsLoading,
-    errorMessage: reservationsErrorMessage,
-  } = useReservations();
-  const { terrains, loading: terrainsLoading, errorMessage: terrainsErrorMessage } = useTerrains();
-
+  const { reservations } = useReservations();
+  const { terrains, selectedTerrain, handleTerrainChange } = useTerrains();
   const [filteredReservations, setFilteredReservations] = useState([]);
-  const [activité, setActivité] = useState();
+
   const [selectedDateRange, setSelectedDateRange] = useState({
     startDate: "",
     endDate: "",
@@ -44,14 +40,13 @@ const ReservationComponent = () => {
   const [selectedReservationId, setSelectedReservationId] = useState(null);
 
   useEffect(() => {
-    console.log(terrains);
-    if (activité) {
-      const filtered = reservations.filter((res) => res.terrain.activité === activité);
+    if (selectedTerrain) {
+      const filtered = reservations.filter((res) => res.terrain.activité === selectedTerrain);
       setFilteredReservations(filtered);
     } else {
       setFilteredReservations(reservations);
     }
-  }, [activité, reservations, terrains]);
+  }, [selectedTerrain, reservations]);
 
   const UpdateData = (e) => {
     setForm({
@@ -91,11 +86,6 @@ const ReservationComponent = () => {
     },
   }));
 
-  const handleActivityChange = (e) => {
-    const selectedActivity = e.target.value;
-    setActivité(selectedActivity);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedDateRange.startDate || !selectedDateRange.endDate) {
@@ -105,7 +95,7 @@ const ReservationComponent = () => {
 
     const formData = {
       ...form,
-      activité,
+      selectedTerrain,
       DateDebut: selectedDateRange.startDate,
       DateFin: selectedDateRange.endDate,
     };
@@ -123,15 +113,11 @@ const ReservationComponent = () => {
         Sexe: "",
       });
       setSelectedDateRange({ startDate: "", endDate: "" });
-    } catch (error) {
-      console.error("Error adding reservation:", error);
-      setErrorMessage("Failed to add reservation. Please try again.");
-    } finally {
-    }
+    } catch (error) {}
   };
   const handleConfirmDraft = async () => {
     if (!pendingReservation) {
-      setErrorMessage("No reservation selected for confirmation.");
+      setErrorMessage("No pending reservation to confirm.");
       return;
     }
 
@@ -139,12 +125,8 @@ const ReservationComponent = () => {
       await updateReservationStatus(pendingReservation.reservation.id);
       setShowModal(false);
       setPendingReservation(null);
-      setErrorMessage("");
     } catch (error) {
-      console.error("Error confirming reservation:", error);
-      setErrorMessage(
-        error.response?.data?.error || "Failed to confirm reservation. Please try again.",
-      );
+      setErrorMessage("Error confirming reservation:");
     } finally {
     }
   };
@@ -168,12 +150,8 @@ const ReservationComponent = () => {
       setSelectedReservationId(null);
       const updatedReservations = await fetchReservations();
       setReservations(updatedReservations);
-      setErrorMessage("");
     } catch (error) {
       console.error("Error cancelling reservation:", error);
-      setErrorMessage(
-        error.response?.data?.error || "Failed to cancel reservation. Please try again.",
-      );
     } finally {
     }
   };
@@ -189,20 +167,11 @@ const ReservationComponent = () => {
         <div className="flex w-full flex-col lg:flex-row gap-6">
           <div className="flex w-full lg:w-2/3 flex-col space-y-4">
             <div className="flex lg:flex-row flex-col w-full lg:justify-evenly">
-              <div className="flex w-full justify-center">
-                <select
-                  className="py-1 rounded-md text-sm lg:px-8 border-2"
-                  value={activité}
-                  onChange={handleActivityChange}
-                >
-                  <option value="">Select Terrain</option>
-                  {terrains.map((terrain) => (
-                    <option key={terrain.id} value={terrain.activité}>
-                      {terrain.activité}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <TerrainSelector
+                terrains={terrains}
+                selectedTerrain={selectedTerrain}
+                handleTerrainChange={handleTerrainChange}
+              />
             </div>
 
             <Calendar
