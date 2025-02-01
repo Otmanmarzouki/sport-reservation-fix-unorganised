@@ -1,15 +1,6 @@
 import React, { useState } from "react";
 
-export default function SimpleForm() {
-  const [formData, setFormData] = useState({
-    prenom: "",
-    nom: "",
-    tel: "",
-    email: "",
-    sexe: "",
-    details: "",
-  });
-
+export default function ReservationForm({ formData, setFormData, onSubmit }) {
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -22,12 +13,12 @@ export default function SimpleForm() {
 
   const validateForm = () => {
     let newErrors = {};
-    if (!formData.prenom) newErrors.prenom = "Le prénom est requis";
-    if (!formData.nom) newErrors.nom = "Le nom est requis";
-    if (!formData.tel) newErrors.tel = "Le téléphone est requis";
-    if (!formData.email) newErrors.email = "L'email est requis";
-    if (!formData.email.includes("@")) newErrors.email = "L'email est invalide";
-    if (!formData.sexe) newErrors.sexe = "Le genre est requis";
+    if (!formData.Prenom) newErrors.Prenom = "Le prénom est requis";
+    if (!formData.Nom) newErrors.Nom = "Le nom est requis";
+    if (!formData.Tel) newErrors.Tel = "Le téléphone est requis";
+    if (!formData.Email) newErrors.Email = "L'email est requis";
+    if (!formData.Email.includes("@")) newErrors.Email = "L'email est invalide";
+    if (!formData.Sexe) newErrors.Sexe = "Le genre est requis";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -35,9 +26,7 @@ export default function SimpleForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log("Form submitted:", formData);
-      // Here you would typically send the data to your server
-      alert("Formulaire soumis avec succès!");
+      onSubmit(formData);
     }
   };
 
@@ -50,20 +39,20 @@ export default function SimpleForm() {
         Informations personnelles
       </h2>
 
-      {["prenom", "nom", "tel", "email"].map((field) => (
+      {["Prenom", "Nom", "Tel", "Email"].map((field) => (
         <div key={field} className="mb-4">
           <label htmlFor={field} className="block text-gray-700 text-sm font-bold mb-2">
             {field.charAt(0).toUpperCase() + field.slice(1)}
           </label>
           <input
-            type={field === "email" ? "email" : "text"}
+            type={field === "Email" ? "email" : "text"}
             id={field}
             name={field}
             value={formData[field]}
             onChange={handleChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             placeholder={
-              field === "tel" ? "Téléphone" : field.charAt(0).toUpperCase() + field.slice(1)
+              field === "Tel" ? "Téléphone" : field.charAt(0).toUpperCase() + field.slice(1)
             }
           />
           {errors[field] && <p className="text-red-500 text-xs italic">{errors[field]}</p>}
@@ -71,13 +60,13 @@ export default function SimpleForm() {
       ))}
 
       <div className="mb-4">
-        <label htmlFor="sexe" className="block text-gray-700 text-sm font-bold mb-2">
+        <label htmlFor="Sexe" className="block text-gray-700 text-sm font-bold mb-2">
           Genre
         </label>
         <select
-          id="sexe"
-          name="sexe"
-          value={formData.sexe}
+          id="Sexe"
+          name="Sexe"
+          value={formData.Sexe}
           onChange={handleChange}
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         >
@@ -86,7 +75,7 @@ export default function SimpleForm() {
           <option value="female">Femme</option>
           <option value="other">Autre</option>
         </select>
-        {errors.sexe && <p className="text-red-500 text-xs italic">{errors.sexe}</p>}
+        {errors.Sexe && <p className="text-red-500 text-xs italic">{errors.Sexe}</p>}
       </div>
 
       <h2 className="text-2xl font-bold mb-4 text-gray-800">Détails sport</h2>

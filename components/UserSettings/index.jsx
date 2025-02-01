@@ -8,7 +8,7 @@ import Loader from "@/Commons/Loader";
 import { FaAvianex, FaRegTrashAlt } from "react-icons/fa";
 
 const UserSettings = () => {
-  const { user, loading, error } = useUser();
+  const { user, loading } = useUser();
   const { setUser, setAvatar } = useUserStore();
   const [formValues, setFormValues] = useState({
     name: "",
@@ -123,7 +123,7 @@ const UserSettings = () => {
                 <Image
                   src={
                     `http://127.0.0.1:8000/storage/${user.avatar}` ||
-                    `http://127.0.0.1:8000/storage/logos/avatar/maleAvatar.png`
+                    `http://127.0.0.1:8000/storage/avatar/maleAvatar.png`
                   }
                   width={100}
                   height={100}

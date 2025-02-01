@@ -9,6 +9,7 @@ export const fetchReservations = async () => {
 };
 
 export const addReservation = async (formData) => {
+  console.log("from service ", formData);
   try {
     const response = await fetch("http://localhost:8000/api/addReservation", {
       method: "POST",
@@ -28,44 +29,31 @@ export const addReservation = async (formData) => {
   }
 };
 
-export const updateReservationStatus = async (id) => {
-  try {
-    const response = await fetch(`http://localhost:8000/api/reservations/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.ok) {
-      return await response.json();
-    } else {
-      console.error("Failed to update reservation status:", response.statusText);
-      throw new Error("Failed to update reservation status");
-    }
-  } catch (error) {
-    console.error("Error updating reservation status:", error);
-    throw error;
+export const updateReservation = async (id, condition) => {
+  const action = {};
+  if (condition === "drafts") {
+    action.drafts = false;
+  } else if (condition === "canceled") {
+    action.canceled = true;
   }
-};
 
-export const cancelReservation = async (id) => {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/cancel/reservation/${id}`, {
-      method: "PUT",
+    const response = await fetch(`http://localhost:8000/api/updateReservation/${id}`, {
+      method: "post",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(action),
     });
 
-    if (response.ok) {
-      return await response.json();
-    } else {
-      console.error("Failed to update reservation status:", response.statusText);
-      throw new Error("Failed to update reservation status");
+    if (!response.ok) {
+      console.error("Failed to update reservation:", response.statusText);
+      throw new Error("Failed to update reservation");
     }
+
+    return await response.json();
   } catch (error) {
-    console.error("Error updating reservation status:", error);
+    console.error("Error updating reservation:", error);
     throw error;
   }
 };

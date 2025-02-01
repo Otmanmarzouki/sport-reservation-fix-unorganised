@@ -17,7 +17,7 @@ const useReservations = () => {
     fetchData();
   }, []);
 
-  return { reservations };
+  return { reservations, setReservations };
 };
 
 export default useReservations;

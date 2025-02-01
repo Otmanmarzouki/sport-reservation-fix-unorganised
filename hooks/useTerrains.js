@@ -4,7 +4,7 @@ import { fetchTerrains } from "@/services/terrain/index";
 
 const useTerrains = () => {
   const [terrains, setTerrains] = useState([]);
-  const [selectedTerrain, setSelectedTerrain] = useState(null);
+  const [activité, setActivité] = useState(null);
 
   useEffect(() => {
     const fetchTerrainsData = async () => {
@@ -21,12 +21,12 @@ const useTerrains = () => {
   }, []);
 
   const handleTerrainChange = (terrainId) => {
-    setSelectedTerrain(terrainId === "" ? null : terrainId);
+    setActivité(terrainId === "" ? null : terrainId);
   };
 
   return {
     terrains,
-    selectedTerrain,
+    activité,
     handleTerrainChange,
   };
 };

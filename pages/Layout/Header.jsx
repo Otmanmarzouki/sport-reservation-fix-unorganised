@@ -1,5 +1,4 @@
-// components/Header.js
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { FaBars } from "react-icons/fa";
@@ -8,23 +7,14 @@ import logo from "@/public/img/logo.png";
 import useUser from "@/hooks/useUser";
 
 export default function Header({ handleToggle }) {
-  const { user, loading, error } = useUser();
+  const { user } = useUser();
+  const [avatarUrl, setAvatarUrl] = useState("http://127.0.0.1:8000/storage/avatar/maleAvatar.png");
 
-  if (loading) {
-    return (
-      <header className="flex items-center justify-between bg-white h-16 px-5 shadow-lg">
-        <div>Loading...</div>
-      </header>
-    );
-  }
-
-  if (error) {
-    return (
-      <header className="flex items-center justify-between bg-white h-16 px-5 shadow-lg">
-        <div>Error loading user data</div>
-      </header>
-    );
-  }
+  useEffect(() => {
+    if (user?.avatar) {
+      setAvatarUrl(`http://127.0.0.1:8000/storage/${user.avatar}`);
+    }
+  }, [user?.avatar]);
 
   return (
     <header className="flex items-center justify-between bg-white h-16 px-5 shadow-lg">
@@ -45,15 +35,12 @@ export default function Header({ handleToggle }) {
         </div>
         <div className="flex items-center space-x-2">
           <Image
-            src={
-              user?.avatar
-                ? `http://127.0.0.1:8000/storage/${user?.avatar}`
-                : `http://127.0.0.1:8000/storage/logos/avatar/maleAvatar.png`
-            }
+            src={avatarUrl}
             width={100}
             height={100}
             className="h-12 w-12 rounded-full"
             alt="User Avatar"
+            onError={() => setAvatarUrl("http://127.0.0.1:8000/storage/avatar/maleAvatar.png")}
           />
           <div className="flex flex-col justify-center">
             <div className="text-black text-xs font-semibold">{user?.name || ""}</div>
