@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import useReservations from "@/hooks/useReservationActions";
+import useGetReservations from "@/hooks/useGetReservation";
 import useTerrains from "@/hooks/useTerrains";
-import { addReservation, updateReservation } from "@/services/reservation/index";
+import useAddReservation from "@/hooks/useAddReservation";
+import { updateReservation } from "@/services/reservation/index";
 import Calendar from "./Calendar";
 import { FaUserCircle } from "react-icons/fa";
 import Modal from "../../Commons/Modal/index";
@@ -14,17 +15,23 @@ const getRandomColor = () => {
 };
 
 const ReservationComponent = () => {
-  const { reservations, setReservations } = useReservations();
+  const { reservations, setReservations } = useGetReservations();
   const { terrains, activité, handleTerrainChange } = useTerrains();
-
+  const {
+    pendingReservation,
+    addNewReservation,
+    error: addError,
+    setError: setAddError,
+    formData,
+    setFormData,
+    setSelectedDateRange,
+  } = useAddReservation();
   const [filteredReservations, setFilteredReservations] = useState([]);
-  const [selectedDateRange, setSelectedDateRange] = useState({ startDate: "", endDate: "" });
-  const [formData, setFormData] = useState({ Prenom: "", Nom: "", Email: "", Tel: "", Sexe: "" });
+
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState("");
-  const [pendingReservation, setPendingReservation] = useState(null);
+
   const [selectedReservationId, setSelectedReservationId] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     setFilteredReservations(
@@ -37,39 +44,22 @@ const ReservationComponent = () => {
   };
 
   const handleFormSubmit = async () => {
-    if (!selectedDateRange.startDate || !selectedDateRange.endDate) {
-      setErrorMessage("Veuillez sélectionner une plage de dates.");
-      return;
-    }
-
-    const newReservationData = {
-      ...formData,
-      activité,
-      DateDebut: selectedDateRange.startDate,
-      DateFin: selectedDateRange.endDate,
-    };
-
-    try {
-      const savedReservation = await addReservation(newReservationData);
-      setPendingReservation(savedReservation);
-      setModalType("confirm");
+    const savedReservation = await addNewReservation(activité);
+    if (savedReservation) {
       setShowModal(true);
-      setSelectedDateRange({ startDate: "", endDate: "" });
-    } catch (error) {
-      console.error("Erreur lors de l'ajout de la réservation:", error);
+      setModalType("confirm");
     }
   };
 
   const handleConfirmDraft = async () => {
     if (!pendingReservation) {
-      setErrorMessage("Aucune réservation en attente à confirmer.");
+      setAddError("Aucune réservation en attente à confirmer.");
       return;
     }
 
     try {
       await updateReservation(pendingReservation.reservation.id, "drafts");
       setShowModal(false);
-      setPendingReservation(null);
     } catch (error) {
       console.error("Erreur lors de la confirmation de la réservation:", error);
     }
@@ -99,7 +89,6 @@ const ReservationComponent = () => {
 
   const handleModalClose = () => {
     setShowModal(false);
-    setPendingReservation(null);
   };
 
   return (
@@ -146,7 +135,7 @@ const ReservationComponent = () => {
               handleDateSelect={handleDateSelect}
               handleEventClick={handleEventClick}
             />
-            {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
+            {addError && <p className="text-red-500 text-center">{addError}</p>}
           </div>
           <div className="flex flex-col w-full lg:w-1/3">
             <ReservationForm

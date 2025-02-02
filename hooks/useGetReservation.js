@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { fetchReservations } from "@/services/reservation";
 
-const useReservations = () => {
+const useGetReservations = () => {
   const [reservations, setReservations] = useState([]);
 
   useEffect(() => {
@@ -20,4 +20,4 @@ const useReservations = () => {
   return { reservations, setReservations };
 };
 
-export default useReservations;
+export default useGetReservations;
