@@ -6,7 +6,7 @@ import { updateReservation } from "@/services/reservation/index";
 import Calendar from "./Calendar";
 import { FaUserCircle } from "react-icons/fa";
 import Modal from "../../Commons/Modal/index";
-import TerrainSelector from "@/components/Reservation/Selector";
+import TerrainSelector from "@/Commons/Selector";
 import ReservationForm from "@/components/Reservation/Form";
 
 const getRandomColor = () => {
@@ -96,17 +96,23 @@ const ReservationComponent = () => {
       <div className="flex flex-col w-full space-y-8 py-4 px-4">
         <div className="flex w-full flex-col lg:flex-row gap-6">
           <div className="flex w-full lg:w-2/3 flex-col space-y-4">
-            <div className="flex flex-row justify-between">
+            <div className="flex flex-row justify-around">
               <TerrainSelector
                 terrains={terrains}
                 selectedTerrain={activité}
                 handleTerrainChange={handleTerrainChange}
               />
-              <TerrainSelector
-                terrains={terrains}
-                selectedTerrain={activité}
-                handleTerrainChange={handleTerrainChange}
-              />
+              <div>
+                <select
+                  id="paymentStatus"
+                  name="paymentStatus"
+                  className="shadow w-full  border rounded py-2 px-3 text-gray-700 leading-tight  focus:shadow-outline"
+                >
+                  <option value="tout">payées et le reste</option>
+                  <option value="payé">payées</option>
+                  <option value="partiellement-payé">Partiellement payé</option>
+                </select>
+              </div>
             </div>
 
             <Calendar

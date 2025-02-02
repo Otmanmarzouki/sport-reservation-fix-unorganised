@@ -7,9 +7,12 @@ import { BsExclamationTriangle } from "react-icons/bs";
 import DoughnutChart from "./Doughnut";
 import LineChart from "./LineChart";
 import Header from "../../Commons/Header";
+import useTerrains from "@/hooks/useTerrains";
+import TerrainSelector from "@/Commons/Selector";
 
 export default function Acceuil() {
   const [draftCount, setDraftCount] = useState(0);
+  const { terrains, activité, handleTerrainChange } = useTerrains();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -41,8 +44,8 @@ export default function Acceuil() {
   return (
     <main className="flex flex-col w-full bg-gray-100 overflow-y-auto px-4 space-y-4">
       <div className="flex flex-col lg:flex-row justify-between mt-7 lg:w-auto ">
-        <Header title="Réservations" className="text-2xl" />
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-[15px] hover:bg-blue-600">
+        <Header title="Réservations" className="text-3xl" />
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
           NOUVELLE RESERVATION
         </button>
       </div>
@@ -69,12 +72,11 @@ export default function Acceuil() {
       <div className="flex flex-row justify-between ">
         <div className="flex items-center">
           <IoFilterSharp className="text-gray-600 mr-2" />
-          <select className="p-2 text-xs bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
-            <option value="">Choisir un Terrain</option>
-            <option value="terrain1">Terrain 1</option>
-            <option value="terrain2">Terrain 2</option>
-            <option value="terrain3">Terrain 3</option>
-          </select>
+          <TerrainSelector
+            terrains={terrains}
+            selectedTerrain={activité}
+            handleTerrainChange={handleTerrainChange}
+          />
         </div>
         <div className="flex justify-end space-x-2">
           <button className="w-14 h-8 text-xs items-center justify-center text-white bg-gray-400 rounded-md hover:bg-gray-500">

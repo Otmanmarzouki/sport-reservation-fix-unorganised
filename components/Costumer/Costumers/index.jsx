@@ -29,7 +29,7 @@ const Customers = () => {
     const success = await deleteClient(selectedRow);
     if (success) {
       const updatedClients = fetchedClients.filter((client) => client.id !== selectedRow);
-      setFetchedClients(updatedClients); // Update the list after deletion
+      setFetchedClients(updatedClients);
       setSelectedRow(null);
     }
   };

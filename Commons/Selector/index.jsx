@@ -10,7 +10,7 @@ const TerrainSelector = ({ terrains, selectedTerrain, handleTerrainChange }) => 
       <select
         value={selectedTerrain || ""}
         onChange={handleChange}
-        className="shadow w-full appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        className="shadow w-full border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
       >
         <option value="">Select Terrain</option>
         {terrains.map((terrain) => (

@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { FiEdit } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
-import CustomButton from "@/components/CustomButton/index";
+import CustomButton from "@/Commons/CustomButton/index";
 import { deleteTerrain } from "@/services/terrain/index";
 import Modal from "@/Commons/Modal/index";
 
