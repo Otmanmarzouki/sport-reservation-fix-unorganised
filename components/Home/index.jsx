@@ -7,27 +7,25 @@ import { BsExclamationTriangle } from "react-icons/bs";
 import DoughnutChart from "./Doughnut";
 import LineChart from "./LineChart";
 import Header from "../../Commons/Header";
+import ReservationCard from "./Card";
 import useTerrains from "@/hooks/useTerrains";
 import TerrainSelector from "@/Commons/Selector";
+import { getCount } from "@/services/home";
 
 export default function Acceuil() {
   const [draftCount, setDraftCount] = useState(0);
+  const [reservationCount, setReservationCount] = useState(0);
   const { terrains, activité, handleTerrainChange } = useTerrains();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    console.log(token);
-    async function fetchData() {
-      try {
-        const response = await fetch("http://localhost:8000/api/drafts");
-        const data = await response.json();
-        setDraftCount(data.draftCount);
-      } catch (error) {
-        console.error("Erreur lors de la récupération des réservations :", error);
-      }
-    }
+    const fetchCounts = async () => {
+      const draftsCount = await getCount("drafts");
+      const reservationsCount = await getCount("reservations");
+      setDraftCount(draftsCount.Count);
+      setReservationCount(reservationsCount.Count);
+    };
 
-    fetchData();
+    fetchCounts();
   }, []);
 
   const cards = [
@@ -37,7 +35,12 @@ export default function Acceuil() {
       count: draftCount,
       iconColor: "text-blue-700",
     },
-    { color: "bg-blue-400", title: "Réservation en Ligne", count: 5, iconColor: "text-blue-400" },
+    {
+      color: "bg-blue-400",
+      title: "Réservation en Ligne",
+      count: reservationCount,
+      iconColor: "text-blue-400",
+    },
     { color: "bg-orange-500", title: "Nouveaux Clients", count: 10, iconColor: "text-orange-500" },
   ];
 
@@ -52,20 +55,13 @@ export default function Acceuil() {
 
       <div className="flex flex-col lg:flex-row gap-4">
         {cards.map(({ color, title, count, iconColor }, index) => (
-          <div
+          <ReservationCard
             key={index}
-            className="flex flex-row items-center w-full lg:w-1/3 p-4 bg-white shadow rounded-lg"
-          >
-            <div
-              className={`flex items-center justify-center h-12 w-12 text-white ${color} rounded-lg`}
-            >
-              <p className="text-lg font-semibold">{count}</p>
-            </div>
-            <h3 className="text-lg font-semibold text-gray-800 ml-4">{title}</h3>
-            <div className="flex items-center justify-between mt-2">
-              <FaRegEdit className={`${iconColor} text-lg ml-28`} />
-            </div>
-          </div>
+            color={color}
+            title={title}
+            count={count}
+            iconColor={iconColor}
+          />
         ))}
       </div>
 
