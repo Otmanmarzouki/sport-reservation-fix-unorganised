@@ -10,35 +10,23 @@ import Header from "../../Commons/Header";
 import ReservationCard from "./Card";
 import useTerrains from "@/hooks/useTerrains";
 import TerrainSelector from "@/Commons/Selector";
-import { getCount } from "@/services/home";
+import { useReservationCounts } from "@/hooks/useReservationCounts";
 
 export default function Acceuil() {
-  const [draftCount, setDraftCount] = useState(0);
-  const [reservationCount, setReservationCount] = useState(0);
+  const { counts } = useReservationCounts();
   const { terrains, activité, handleTerrainChange } = useTerrains();
-
-  useEffect(() => {
-    const fetchCounts = async () => {
-      const draftsCount = await getCount("drafts");
-      const reservationsCount = await getCount("reservations");
-      setDraftCount(draftsCount.Count);
-      setReservationCount(reservationsCount.Count);
-    };
-
-    fetchCounts();
-  }, []);
 
   const cards = [
     {
       color: "bg-blue-700",
       title: "Réservation Brouillon",
-      count: draftCount,
+      count: counts.draftCount,
       iconColor: "text-blue-700",
     },
     {
       color: "bg-blue-400",
       title: "Réservation en Ligne",
-      count: reservationCount,
+      count: counts.reservationCount,
       iconColor: "text-blue-400",
     },
     { color: "bg-orange-500", title: "Nouveaux Clients", count: 10, iconColor: "text-orange-500" },

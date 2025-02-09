@@ -34,6 +34,7 @@ const ReservationComponent = () => {
   const [selectedReservationId, setSelectedReservationId] = useState(null);
 
   useEffect(() => {
+    console.log(reservations);
     setFilteredReservations(
       activité ? reservations.filter((res) => res.terrain.activité === activité) : reservations,
     );
