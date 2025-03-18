@@ -4,13 +4,12 @@ import { fetchTerrains } from "@/services/terrain/index";
 
 const useTerrains = () => {
   const [terrains, setTerrains] = useState([]);
-  const [activité, setActivité] = useState(null);
+  const [terrainId, setTerrainId] = useState(null);
 
   useEffect(() => {
     const fetchTerrainsData = async () => {
       try {
         const data = await fetchTerrains();
-        console.log(data);
         setTerrains(data);
       } catch (error) {
         console.error("Error fetching terrains:", error);
@@ -21,12 +20,12 @@ const useTerrains = () => {
   }, []);
 
   const handleTerrainChange = (terrainId) => {
-    setActivité(terrainId === "" ? null : terrainId);
+    setTerrainId(terrainId === "" ? null : terrainId);
   };
 
   return {
     terrains,
-    activité,
+    terrainId,
     handleTerrainChange,
   };
 };

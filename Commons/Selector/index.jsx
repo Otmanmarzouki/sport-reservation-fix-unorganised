@@ -2,7 +2,7 @@ import React from "react";
 
 const TerrainSelector = ({ terrains, selectedTerrain, handleTerrainChange }) => {
   const handleChange = (e) => {
-    handleTerrainChange(e.target.value);
+    handleTerrainChange(Number(e.target.value));
   };
 
   return (
@@ -14,7 +14,7 @@ const TerrainSelector = ({ terrains, selectedTerrain, handleTerrainChange }) => 
       >
         <option value="">Select Terrain</option>
         {terrains.map((terrain) => (
-          <option key={terrain.id} value={terrain.activité}>
+          <option key={terrain.id} value={terrain.id}>
             {terrain.activité}
           </option>
         ))}

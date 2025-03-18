@@ -29,7 +29,12 @@ export default function Acceuil() {
       count: counts.reservationCount,
       iconColor: "text-blue-400",
     },
-    { color: "bg-orange-500", title: "Nouveaux Clients", count: 10, iconColor: "text-orange-500" },
+    {
+      color: "bg-orange-500",
+      title: "Nouveaux Clients",
+      count: counts.newClients,
+      iconColor: "text-orange-500",
+    },
   ];
 
   return (

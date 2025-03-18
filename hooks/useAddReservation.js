@@ -7,7 +7,7 @@ const useAddReservation = () => {
   const [pendingReservation, setPendingReservation] = useState(null);
   const [error, setError] = useState(null);
 
-  const addNewReservation = async (activité) => {
+  const addNewReservation = async (terrainId) => {
     if (!formData.Prenom || !formData.Nom || !formData.Email || !formData.Tel) {
       setError("Veuillez remplir tous les champs");
       return;
@@ -19,7 +19,7 @@ const useAddReservation = () => {
     }
     const newReservation = {
       ...formData,
-      activité: activité,
+      terrainId: terrainId,
       DateDebut: selectedDateRange.startDate,
       DateFin: selectedDateRange.endDate,
     };
@@ -40,6 +40,7 @@ const useAddReservation = () => {
   return {
     formData,
     setFormData,
+    selectedDateRange,
     setSelectedDateRange,
     addNewReservation,
     error,

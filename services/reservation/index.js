@@ -9,7 +9,6 @@ export const fetchReservations = async () => {
 };
 
 export const addReservation = async (formData) => {
-  console.log("from service ", formData);
   try {
     const response = await fetch("http://localhost:8000/api/addReservation", {
       method: "POST",

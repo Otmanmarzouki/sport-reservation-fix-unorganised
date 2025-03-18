@@ -16,7 +16,7 @@ const getRandomColor = () => {
 
 const ReservationComponent = () => {
   const { reservations, setReservations } = useGetReservations();
-  const { terrains, activité, handleTerrainChange } = useTerrains();
+  const { terrains, terrainId, handleTerrainChange } = useTerrains();
   const {
     pendingReservation,
     addNewReservation,
@@ -24,6 +24,7 @@ const ReservationComponent = () => {
     setError: setAddError,
     formData,
     setFormData,
+    selectedDateRange,
     setSelectedDateRange,
   } = useAddReservation();
   const [filteredReservations, setFilteredReservations] = useState([]);
@@ -34,18 +35,38 @@ const ReservationComponent = () => {
   const [selectedReservationId, setSelectedReservationId] = useState(null);
 
   useEffect(() => {
-    console.log(reservations);
-    setFilteredReservations(
-      activité ? reservations.filter((res) => res.terrain.activité === activité) : reservations,
-    );
-  }, [activité, reservations]);
+    if (!terrainId) {
+      setFilteredReservations(reservations);
+    } else {
+      setFilteredReservations(reservations.filter((res) => res.terrain.id === terrainId));
+    }
+  }, [terrainId, reservations]);
 
   const handleDateSelect = ({ start, end }) => {
     setSelectedDateRange({ startDate: start, endDate: end });
   };
 
   const handleFormSubmit = async () => {
-    const savedReservation = await addNewReservation(activité);
+    const { startDate, endDate } = selectedDateRange;
+    const newStart = new Date(startDate);
+    const newEnd = new Date(endDate);
+    const hasConflict = reservations
+      .filter((res) => res.terrain.id === terrainId)
+      .some((res) => {
+        const resStart = new Date(res.DateDebut);
+        const resEnd = new Date(res.DateFin);
+        return (
+          (resStart <= newStart && newStart <= resEnd) ||
+          (resStart <= newEnd && newEnd <= resEnd) ||
+          (newStart <= resStart && resStart <= newEnd)
+        );
+      });
+    if (hasConflict) {
+      setAddError("You have a conflict with an existing reservation");
+      return;
+    }
+
+    const savedReservation = await addNewReservation(terrainId);
     if (savedReservation) {
       setShowModal(true);
       setModalType("confirm");
@@ -100,7 +121,7 @@ const ReservationComponent = () => {
             <div className="flex flex-row justify-around">
               <TerrainSelector
                 terrains={terrains}
-                selectedTerrain={activité}
+                selectedTerrain={terrainId}
                 handleTerrainChange={handleTerrainChange}
               />
               <div>

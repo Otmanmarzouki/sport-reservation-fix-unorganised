@@ -1,13 +1,17 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 
 export default function Calendar({ events, handleEventClick }) {
-  const today = new Date().toISOString().split("T")[0];
-  const workingHours = {
-    start: `${today}T06:00:00`,
-    end: `${today}T19:00:00`,
-  };
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
+
+  const workingHours = useMemo(
+    () => ({
+      start: new Date(`${selectedDate}T06:00:00`),
+      end: new Date(`${selectedDate}T19:00:00`),
+    }),
+    [selectedDate],
+  );
 
   const resources = useMemo(() => {
     const terrainSet = new Set(events.map((event) => event.terrain_name));
@@ -19,61 +23,58 @@ export default function Calendar({ events, handleEventClick }) {
   }, [events]);
 
   const calendarEvents = useMemo(() => {
-    return events.flatMap((event) => {
-      const { terrain_name, reservations } = event;
+    return events.flatMap(({ terrain_name, reservations }) => {
+      let lastEndTime = workingHours.start;
+      const slots = [];
 
-      if (reservations.length === 0) {
-        return [
-          {
-            start: workingHours.start,
-            end: workingHours.end,
+      // Sort reservations by start time
+      const sortedReservations = [...reservations].sort(
+        (a, b) => new Date(a.DateDebut) - new Date(b.DateDebut),
+      );
+
+      sortedReservations.forEach(({ DateDebut, DateFin, canceled }) => {
+        const start = new Date(DateDebut);
+        const end = new Date(DateFin);
+
+        // Add available slot before the reservation
+        if (lastEndTime < start) {
+          slots.push({
+            start: lastEndTime.toISOString(),
+            end: start.toISOString(),
             resourceId: terrain_name,
             title: "Créneau disponible",
             className: "Dsp-slot",
-          },
-        ];
-      }
+          });
+        }
 
-      const freeSlots = [];
-      let lastEndTime = workingHours.start;
-
-      for (const reservation of reservations) {
-        const { DateDebut, DateFin, canceled } = reservation;
-
-        if (canceled === 1) {
-          freeSlots.push({
-            start: DateDebut,
-            end: DateFin,
+        // Add canceled slot if applicable
+        if (canceled) {
+          slots.push({
+            start: start.toISOString(),
+            end: end.toISOString(),
             resourceId: terrain_name,
             title: "Créneau annulé",
             className: "canceled-slot",
           });
         }
-        if (new Date(lastEndTime) < new Date(DateDebut)) {
-          freeSlots.push({
-            start: lastEndTime,
-            end: DateDebut,
-            resourceId: terrain_name,
-            title: "Créneau disponible",
-            className: "Dsp-slot",
-          });
-        }
-        lastEndTime = DateFin;
-      }
 
-      if (new Date(lastEndTime) < new Date(workingHours.end)) {
-        freeSlots.push({
-          start: lastEndTime,
-          end: workingHours.end,
+        lastEndTime = end;
+      });
+
+      // Add final available slot if time remains
+      if (lastEndTime < workingHours.end) {
+        slots.push({
+          start: lastEndTime.toISOString(),
+          end: workingHours.end.toISOString(),
           resourceId: terrain_name,
           title: "Créneau disponible",
           className: "Dsp-slot",
         });
       }
 
-      return freeSlots;
+      return slots;
     });
-  }, [events]);
+  }, [events, workingHours]);
 
   return (
     <div>
@@ -101,6 +102,7 @@ export default function Calendar({ events, handleEventClick }) {
         slotMinTime="06:00:00"
         slotMaxTime="19:00:00"
         resourceAreaWidth="50px"
+        eventOverlap={false}
         eventContent={(arg) => {
           const borderColorClass =
             arg.event.title === "Créneau disponible"

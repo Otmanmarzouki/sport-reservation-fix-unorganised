@@ -4,11 +4,12 @@ export default function ReservationForm({ formData, setFormData, onSubmit }) {
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      setFormData({ ...formData, [name]: checked });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const validateForm = () => {
@@ -91,6 +92,28 @@ export default function ReservationForm({ formData, setFormData, onSubmit }) {
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-32"
           placeholder="Entrez les détails de votre sport"
         ></textarea>
+      </div>
+      <div className="mb-10 flex items-center">
+        <input
+          type="checkbox"
+          id="paid"
+          name="paid"
+          checked={formData.paid || false}
+          onChange={(e) => setFormData((prevData) => ({ ...prevData, paid: e.target.checked }))}
+          className="hidden"
+        />
+        <label htmlFor="paid" className="flex items-center cursor-pointer">
+          <div
+            className={`w-5 h-5 rounded-full border-2 border-blue-500 transition-all ${
+              formData.paid ? "bg-blue-500" : "bg-white"
+            }`}
+          ></div>
+          <span
+            className={`ml-2 ${formData.paid ? "text-gray-700 font-medium" : "text-gray-400 "} text-sm `}
+          >
+            Paiement espece
+          </span>
+        </label>
       </div>
 
       <div className="flex items-center justify-center">
