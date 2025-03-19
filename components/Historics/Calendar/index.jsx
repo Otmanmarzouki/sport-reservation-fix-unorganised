@@ -4,7 +4,10 @@ import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 
 export default function Calendar({ events, handleEventClick }) {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
-
+  const slotLabelFormat = {
+    hour: "numeric",
+    minute: "2-digit",
+  };
   const workingHours = useMemo(
     () => ({
       start: new Date(`${selectedDate}T06:00:00`),
@@ -12,7 +15,9 @@ export default function Calendar({ events, handleEventClick }) {
     }),
     [selectedDate],
   );
-
+  const handleDatesSet = (dateInfo) => {
+    setSelectedDate(dateInfo.startStr.split("T")[0]);
+  };
   const resources = useMemo(() => {
     const terrainSet = new Set(events.map((event) => event.terrain_name));
 
@@ -90,10 +95,11 @@ export default function Calendar({ events, handleEventClick }) {
       <FullCalendar
         plugins={[resourceTimeGridPlugin]}
         initialView="resourceTimeGridDay"
-        slotLabelFormat={{ hour: "numeric", minute: "2-digit" }}
+        slotLabelFormat={slotLabelFormat}
         resources={resources}
         events={calendarEvents}
         allDaySlot={false}
+        locale={"fr"}
         headerToolbar={{
           left: "prev",
           center: "title",
@@ -103,6 +109,7 @@ export default function Calendar({ events, handleEventClick }) {
         slotMaxTime="19:00:00"
         resourceAreaWidth="50px"
         eventOverlap={false}
+        datesSet={handleDatesSet}
         eventContent={(arg) => {
           const borderColorClass =
             arg.event.title === "Créneau disponible"

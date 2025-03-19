@@ -17,6 +17,8 @@ const Calendar = ({ events, handleDateSelect, handleEventClick }) => {
       weekends={false}
       allDaySlot={false}
       locale={"fr"}
+      slotMinTime="06:00:00"
+      slotMaxTime="19:00:00"
       slotLabelFormat={slotLabelFormat}
       navLinks={true}
       headerToolbar={{

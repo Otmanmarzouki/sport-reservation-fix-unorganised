@@ -8,6 +8,7 @@ import { FaUserCircle } from "react-icons/fa";
 import Modal from "../../Commons/Modal/index";
 import TerrainSelector from "@/Commons/Selector";
 import ReservationForm from "@/components/Reservation/Form";
+import { toast } from "react-toastify";
 
 const getRandomColor = () => {
   const colors = ["#FFDDC1", "#C1FFD7", "#D1C1FF", "#FFC1C1", "#FFF0C1"];
@@ -20,8 +21,7 @@ const ReservationComponent = () => {
   const {
     pendingReservation,
     addNewReservation,
-    error: addError,
-    setError: setAddError,
+
     formData,
     setFormData,
     selectedDateRange,
@@ -62,12 +62,13 @@ const ReservationComponent = () => {
         );
       });
     if (hasConflict) {
-      setAddError("You have a conflict with an existing reservation");
+      toast.error("Conflit détecté avec une réservation existante !");
       return;
     }
 
     const savedReservation = await addNewReservation(terrainId);
     if (savedReservation) {
+      toast.success("Réservation ajoutée avec succès !");
       setShowModal(true);
       setModalType("confirm");
     }
@@ -163,7 +164,6 @@ const ReservationComponent = () => {
               handleDateSelect={handleDateSelect}
               handleEventClick={handleEventClick}
             />
-            {addError && <p className="text-red-500 text-center">{addError}</p>}
           </div>
           <div className="flex flex-col w-full lg:w-1/3">
             <ReservationForm
